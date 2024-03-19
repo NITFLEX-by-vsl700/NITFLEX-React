@@ -16,6 +16,13 @@ function Watch(){
         return result.split('/');
     }
 
+    const numberToText = (num: number): string => {
+        if(num < 10)
+            return '0' + num;
+
+        return num.toString();
+    }
+
     const BASE_URL = "http://localhost:8080"; // TEMPORARY
 
     // pathName = '/watch/{movieId}' or '/watch/{movieId}/{episodeId}'
@@ -53,6 +60,14 @@ function Watch(){
             {movie !== defaultMovie 
                 && ((movie.type === "Series" && !episodes.includes(defaultEpisode)) || movie.type !== "Series") 
                 && <Player videoPath={videoPath} />}
+
+            <div className='Watch-episodes'>
+                {episodes.filter(e => e !== defaultEpisode).map(e => 
+                    <div key={e.id} className='Watch-episode-element'>
+                        <a href={`/watch/${movieId}/${e.id}`}>{`S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}</a>
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
