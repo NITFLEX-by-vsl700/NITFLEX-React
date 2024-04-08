@@ -1,12 +1,15 @@
 import { useEffect, useState } from 'react';
-import Player from '../Player';
+import { Player, SubtitleTrack } from '../Player';
 import { Movie, defaultMovie } from '../models/Movie';
 import { Episode, defaultEpisode } from '../models/Episode';
+import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 import './Watch.css';
 
 function Watch(){
     const [movie, setMovie] = useState(defaultMovie);
     const [episodes, setEpisodes] = useState([defaultEpisode]);
+    const [subtitles, setSubtitles] = useState([defaultSubtitle]);
+    const [ready, setReady] = useState(false);
 
     const getPathNameSegments = (): string[] => {
         let result = window.location.pathname.substring(1);
@@ -23,12 +26,16 @@ function Watch(){
         return num.toString();
     }
 
+    const getEpisodeId = (epsArr: Episode[]): string => {
+        return pathNameSegments[2] !== undefined ? pathNameSegments[2] : epsArr[0].id;
+    }
+
     const BASE_URL = "http://localhost:8080"; // TEMPORARY
 
     // pathName = '/watch/{movieId}' or '/watch/{movieId}/{episodeId}'
     const pathNameSegments = getPathNameSegments();
     const movieId = pathNameSegments[1];
-    const episodeId = pathNameSegments[2] !== undefined ? pathNameSegments[2] : episodes[0].id;
+    const episodeId = getEpisodeId(episodes);
 
     // fetch necessary data
     useEffect(() => {
@@ -46,20 +53,34 @@ function Watch(){
                         .then(response1 => response1.json())
                         .then((epsArr: Episode[]) => {
                             setEpisodes(epsArr);
+
+                            fetch(BASE_URL + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`)
+                            .then(response => response.json())
+                            .then((subsArr: Subtitle[]) => {
+                                setSubtitles(subsArr);
+                                setReady(true);
+                            })
                         })
+                }else{
+                    fetch(BASE_URL + `/subtitles/${obj.id}/film`)
+                    .then(response => response.json())
+                    .then((subsArr: Subtitle[]) => {
+                        setSubtitles(subsArr);
+                        setReady(true);
+                    })
                 }
             });
     });
 
-    let videoPath = `stream/${movie.type.toLowerCase()}/${movieId}`;
+    let videoPath = `${BASE_URL}/stream/${movie.type.toLowerCase()}/${movieId}`;
     if(movie.type === "Series")
         videoPath += `/${episodeId}`;
     
     return (
         <div className='Watch'>
-            {movie !== defaultMovie 
-                && ((movie.type === "Series" && !episodes.includes(defaultEpisode)) || movie.type !== "Series") 
-                && <Player videoPath={videoPath} />}
+            {ready && <Player 
+                    videoPath={videoPath} 
+                    subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${BASE_URL}/stream/subs/${movie.id}/${s.id}`, label: s.name}})} />}
 
             <div className='Watch-episodes'>
                 {episodes.filter(e => e !== defaultEpisode).map(e => 
