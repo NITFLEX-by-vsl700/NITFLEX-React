@@ -1,0 +1,59 @@
+.Header{
+    background-color: #373737;
+    width: 100vw;
+    height: 67px;
+    display: flex;
+    align-items: center;
+}
+
+.Navbar-container{
+    height: 100vh;
+    position: absolute;
+    animation-name: showNavbar;
+    animation-duration: 0.25s;
+}
+
+.Navbar-container-hidden{
+    animation-name: none;
+    transform: translateX(-100%);
+}
+
+@keyframes showNavbar{
+    0%{
+        transform: translateX(-100%);
+    }
+
+    100%{
+        transform: translateX(0%);
+    }
+}
+
+.Header-logo{
+    width: 223px;
+}
+
+.Header-menu-button{
+    --btn-size: 33px;
+    width: var(--btn-size);
+    height: var(--btn-size);
+    border: none;
+    border-radius: 5px;
+    background-color: #6F6F6F;
+    padding: 0;
+}
+
+.Header-menu-button,
+.Header-logo{
+    margin-left: 25px;
+}
+
+.Header-movie-request{
+    margin-left: auto;
+    margin-right: 22px;
+}
+
+.Header-movie-request input#movie-request-link{
+    width: 332px;
+    height: 40px;
+    font-size: 17px;
+}

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Player, SubtitleTrack } from '../Player';
+import { Player, SubtitleTrack } from '../components/Player';
 import { Movie, defaultMovie } from '../models/Movie';
 import { Episode, defaultEpisode } from '../models/Episode';
 import { Subtitle, defaultSubtitle } from '../models/Subtitle';

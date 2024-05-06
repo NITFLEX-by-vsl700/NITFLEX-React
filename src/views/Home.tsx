@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Movie, defaultMovie } from '../models/Movie';
 import './Home.css';
+import { Header } from '../components/Header';
 
 function Home() {
   const [movies, setMovies] = useState([defaultMovie]);
@@ -24,13 +25,16 @@ function Home() {
   });
 
   return (
-    <div className="Home">
-      <div className='Home-movies'>
-        {movies.filter(m => m !== defaultMovie).map(m => 
-          <div key={m.id} className='Home-movie-element'>
-            <a href={`/watch/${m.id}`}>{m.name}</a>
-          </div>
-        )}
+    <div>
+      <Header navbar={true} />
+      <div className="Home">
+        <div className='Home-movies'>
+          {movies.filter(m => m !== defaultMovie).map(m => 
+            <div key={m.id} className='Home-movie-element'>
+              <a href={`/watch/${m.id}`}>{m.name}</a>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
