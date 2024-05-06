@@ -28,7 +28,7 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
 const NavHeading = () => {
     return (
         <div className="Navbar-heading">
-            <h3 className="Navbar-username">vsl700</h3>
+            <p className="Navbar-username">vsl700</p>
             <p className="Navbar-role">Owner</p>
         </div>
     )

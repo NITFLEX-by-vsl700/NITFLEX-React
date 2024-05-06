@@ -13,6 +13,8 @@
 
 .Navbar-head .Navbar-username{
     margin: 0;
+    font-size: 20px;
+    font-weight: bold;
 }
 
 .Navbar-head .Navbar-role{
