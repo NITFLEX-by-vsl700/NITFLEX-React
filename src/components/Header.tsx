@@ -15,7 +15,7 @@ export const Header = (props: {navbar?: boolean}) => {
         <div>
             {props.navbar && 
                 <div className={`Navbar-container${navbarToggled ? '' : ' Navbar-container-hidden'}`}>
-                    <Navbar closeable={true} onClose={toggleNavbar} />
+                    <Navbar closeable onClose={toggleNavbar} />
                 </div>
             }
             <div className='Header'>

@@ -4,6 +4,7 @@ import './index.css';
 import Home from './views/Home';
 import Watch from './views/Watch';
 import reportWebVitals from './reportWebVitals';
+import { ProfileSettings } from './views/ProfileSettings';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -13,6 +14,7 @@ root.render(
     <Routes>
       <Route index path='/' Component={Home} />
       <Route path='/watch/*' Component={Watch} />
+      <Route path='/settings/profilesettings' Component={ProfileSettings} />
     </Routes>
   </BrowserRouter>
 );

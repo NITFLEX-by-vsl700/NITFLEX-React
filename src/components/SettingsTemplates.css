@@ -1,0 +1,46 @@
+.vertical{
+    display: flex;
+    flex-direction: column;
+}
+
+.horizontal{
+    display: flex;
+}
+
+.Settings-page{
+    background-color: white;
+    width: 100vw;
+    height: 100vh;
+}
+
+.Settings-page .Content{
+    padding-inline: 40px;
+}
+
+.Settings-page h1,
+.Settings-page h2{
+    margin-bottom: 10px;
+    padding-inline: 20px;
+}
+
+.Navbar-content{
+    height: 100%;
+}
+
+.Content {
+    width: 100%;
+}
+
+.Content hr{
+    margin-inline: 0;
+}
+
+.Settings-page .Navbar-container{
+    position: relative;
+    height: 100%;
+    animation: none;
+}
+
+.Setting-section{
+    margin-bottom: 30px;
+}
