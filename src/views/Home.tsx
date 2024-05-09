@@ -29,6 +29,9 @@ function Home() {
     <div>
       <Header navbar={true} />
       <div className="Home">
+        <form className='Search-form'>
+          <input type="text" name='search' placeholder='Search' />
+        </form>
         <div className='Home-movies'>
           {movies.filter(m => m !== defaultMovie).map(m => 
             <MovieCard key={m.id} movie={m} />
