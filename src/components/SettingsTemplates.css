@@ -14,7 +14,12 @@
 }
 
 .Settings-page .Content{
+    width: 100%;
     padding-inline: 40px;
+}
+
+.Settings-page .Content hr{
+    margin-inline: 0;
 }
 
 .Settings-page h1,
@@ -25,14 +30,6 @@
 
 .Navbar-content{
     height: 100%;
-}
-
-.Content {
-    width: 100%;
-}
-
-.Content hr{
-    margin-inline: 0;
 }
 
 .Settings-page .Navbar-container{
