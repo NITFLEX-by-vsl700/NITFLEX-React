@@ -1,12 +1,3 @@
-.vertical{
-    display: flex;
-    flex-direction: column;
-}
-
-.horizontal{
-    display: flex;
-}
-
 .Settings-page{
     background-color: white;
     width: 100vw;
@@ -40,4 +31,23 @@
 
 .Setting-section{
     margin-bottom: 30px;
+}
+
+.Horizontal-setting{
+    margin-bottom: 7px;
+}
+
+.Horizontal-setting p{
+    height: fit-content;
+    margin-block: auto;
+    margin-right: auto;
+}
+
+.Horizontal-setting input{
+    height: 35px;
+}
+
+.Horizontal-setting label{
+    height: fit-content;
+    margin-block: auto;
 }

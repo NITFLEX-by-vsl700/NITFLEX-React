@@ -31,3 +31,12 @@ export const SettingSection = (props: {title: string, separatorLine?: boolean, c
         </div>
     )
 }
+
+export const HorizontalSetting = (props: {label: string, children: React.ReactElement | React.ReactElement[]}) => {
+    return (
+        <div className="Horizontal-setting horizontal">
+            <p>{props.label}</p>
+            {props.children}
+        </div>
+    )
+}
