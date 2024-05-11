@@ -5,6 +5,7 @@ import Home from './views/Home';
 import Watch from './views/Watch';
 import reportWebVitals from './reportWebVitals';
 import { ProfileSettings } from './views/ProfileSettings';
+import { ManageUsers } from './views/ManageUsers';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -15,6 +16,7 @@ root.render(
       <Route index path='/' Component={Home} />
       <Route path='/watch/*' Component={Watch} />
       <Route path='/settings/profilesettings' Component={ProfileSettings} />
+      <Route path='/settings/users' Component={ManageUsers} />
     </Routes>
   </BrowserRouter>
 );

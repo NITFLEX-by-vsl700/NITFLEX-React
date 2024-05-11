@@ -29,7 +29,7 @@
     padding-inline: 13px;
 }
 
-.Settings-table tr:nth-child(even){
+.Settings-table tbody tr:nth-child(odd){
     background-color: #BABABA;
 }
 
