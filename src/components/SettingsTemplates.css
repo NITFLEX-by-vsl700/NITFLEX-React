@@ -43,7 +43,8 @@
     margin-right: auto;
 }
 
-.Horizontal-setting input{
+.Horizontal-setting input,
+.Horizontal-setting select{
     height: 35px;
 }
 
