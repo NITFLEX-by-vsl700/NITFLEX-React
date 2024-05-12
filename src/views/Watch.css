@@ -1,0 +1,10 @@
+.Watch{
+    margin-top: 50px;
+    margin-inline: auto;
+    width: fit-content;
+}
+
+.Watch .Watch-episodes{
+    height: 200px;
+    overflow-y: scroll;
+}

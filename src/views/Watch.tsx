@@ -4,6 +4,8 @@ import { Movie, defaultMovie } from '../models/Movie';
 import { Episode, defaultEpisode } from '../models/Episode';
 import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 import './Watch.css';
+import { Header } from '../components/Header';
+import { backendUrl } from '../globals';
 
 function Watch(){
     const [movie, setMovie] = useState(defaultMovie);
@@ -30,8 +32,6 @@ function Watch(){
         return pathNameSegments[2] !== undefined ? pathNameSegments[2] : epsArr[0].id;
     }
 
-    const BASE_URL = "http://localhost:8080"; // TEMPORARY
-
     // pathName = '/watch/{movieId}' or '/watch/{movieId}/{episodeId}'
     const pathNameSegments = getPathNameSegments();
     const movieId = pathNameSegments[1];
@@ -42,19 +42,19 @@ function Watch(){
         if(movie !== defaultMovie)
             return;
 
-        fetch(BASE_URL + `/movies/${movieId}`)
+        fetch(backendUrl + `/movies/${movieId}`)
             .then(response => response.json())
             .then((obj: Movie) => {
                 setMovie(obj);
 
                 if(obj.type === "Series"){
                     // fetch episodes as well
-                    fetch(BASE_URL + `/episodes/${movieId}`)
+                    fetch(backendUrl + `/episodes/${movieId}`)
                         .then(response1 => response1.json())
                         .then((epsArr: Episode[]) => {
                             setEpisodes(epsArr);
 
-                            fetch(BASE_URL + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`)
+                            fetch(backendUrl + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`)
                             .then(response => response.json())
                             .then((subsArr: Subtitle[]) => {
                                 setSubtitles(subsArr);
@@ -62,7 +62,7 @@ function Watch(){
                             })
                         })
                 }else{
-                    fetch(BASE_URL + `/subtitles/${obj.id}/film`)
+                    fetch(backendUrl + `/subtitles/${obj.id}/film`)
                     .then(response => response.json())
                     .then((subsArr: Subtitle[]) => {
                         setSubtitles(subsArr);
@@ -72,22 +72,28 @@ function Watch(){
             });
     });
 
-    let videoPath = `${BASE_URL}/stream/${movie.type.toLowerCase()}/${movieId}`;
+    let videoPath = `${backendUrl}/stream/${movie.type.toLowerCase()}/${movieId}`;
     if(movie.type === "Series")
         videoPath += `/${episodeId}`;
     
     return (
-        <div className='Watch'>
-            {ready && <Player 
-                    videoPath={videoPath} 
-                    subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${BASE_URL}/stream/subs/${movie.id}/${s.id}`, label: s.name}})} />}
+        <div>
+            <Header navbar></Header>
+            <div className='Watch'>
+                {ready && <Player
+                        width={700}
+                        videoPath={videoPath} 
+                        subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${backendUrl}/stream/subs/${movie.id}/${s.id}`, label: s.name}})} />}
 
-            <div className='Watch-episodes'>
-                {episodes.filter(e => e !== defaultEpisode).map(e => 
-                    <div key={e.id} className='Watch-episode-element'>
-                        <a href={`/watch/${movieId}/${e.id}`}>{`S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}</a>
+                {!episodes.includes(defaultEpisode) && 
+                    <div className='Watch-episodes'>
+                        {episodes.map(e => 
+                            <div key={e.id} className='Watch-episode-element'>
+                                <a href={`/watch/${movieId}/${e.id}`}>{`S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}</a>
+                            </div>
+                        )}
                     </div>
-                )}
+                }
             </div>
         </div>
     );

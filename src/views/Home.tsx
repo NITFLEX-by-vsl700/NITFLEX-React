@@ -3,14 +3,13 @@ import { Movie, defaultMovie } from '../models/Movie';
 import './Home.css';
 import './MovieCard.css'
 import { Header } from '../components/Header';
+import { backendUrl } from '../globals';
 
 function Home() {
   const [movies, setMovies] = useState([defaultMovie]);
 
-  const BASE_URL = "http://localhost:8080"; // TEMPORARY
-
   const fetchMovies = () => {
-    fetch(BASE_URL + "/movies")
+    fetch(backendUrl + "/movies")
       .then(response => response.json())
       .then((arr: Movie[]) => {
         setMovies(arr);
@@ -43,6 +42,10 @@ function Home() {
 }
 
 const MovieCard = (props: {movie: Movie}) => {
+  const watchMovie = () => {
+    window.location.href = `/watch/${props.movie.id}`;
+  }
+
   return (
     <div className='Movie-card'>
       <div className='Movie-card-data'>
@@ -50,16 +53,16 @@ const MovieCard = (props: {movie: Movie}) => {
         <p className='Movie-added-by'>Added by {"vsl700"}</p>
       </div>
       <div className='Movie-card-action'>
-        <MovieCardAction>Watch</MovieCardAction>
-        <MovieCardAction>Watch trailer</MovieCardAction>
+        <MovieCardAction onClick={watchMovie}>Watch</MovieCardAction>
+        <MovieCardAction onClick={() => {alert('Not implemented!')}}>Watch trailer</MovieCardAction>
       </div>
     </div>
   )
 }
 
-const MovieCardAction = (props: {children: string}) => {
+const MovieCardAction = (props: {onClick: Function, children: string}) => {
   return (
-    <div className='Movie-card-option'>
+    <div className='Movie-card-option' onClick={() => props.onClick()}>
       <p className='Option-text'>{props.children}</p>
     </div>
   )
