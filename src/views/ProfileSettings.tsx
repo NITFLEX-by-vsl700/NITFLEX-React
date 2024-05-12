@@ -51,7 +51,7 @@ export const ProfileSettings = () => {
                 <HorizontalSetting label="Device limit">
                     <input type="number" name="devlimit" id="device-limit" min={1} defaultValue={3} />
                 </HorizontalSetting>
-                <button className="nitflex-button" id="btn-save">Save settings</button>
+                <button className="Settings-save-button nitflex-button">Save settings</button>
             </SettingSection>
         </SettingsPageTemplate>
     )

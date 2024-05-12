@@ -7,6 +7,7 @@ import reportWebVitals from './reportWebVitals';
 import { ProfileSettings } from './views/ProfileSettings';
 import { ManageUsers } from './views/ManageUsers';
 import { ManageMovies } from './views/ManageMovies';
+import { EditMovie } from './views/EditMovie';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -19,6 +20,7 @@ root.render(
       <Route path='/settings/profilesettings' Component={ProfileSettings} />
       <Route path='/settings/users' Component={ManageUsers} />
       <Route path='/settings/movies' Component={ManageMovies} />
+      <Route path='/settings/movies/*' Component={EditMovie} />
     </Routes>
   </BrowserRouter>
 );

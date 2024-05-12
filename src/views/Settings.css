@@ -41,3 +41,28 @@
 .Settings-table th:last-child{
     width: 108px;
 }
+
+.Settings-save-button{
+    width: 100px;
+    height: 35px;
+    border: none;
+    color: white;
+    background-color: #5E5E5E;
+    margin-inline: auto;
+    margin-top: 20px;
+}
+
+.Settings-save-button:hover{
+    background-color: #999;
+}
+
+.Settings-vertical-form{
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    margin-inline: auto;
+}
+
+.Settings-vertical-form label{
+    margin-top: 15px;
+}
