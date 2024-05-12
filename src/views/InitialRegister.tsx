@@ -9,7 +9,7 @@ export const InitialRegister = () => {
                 <label htmlFor="password">Password:</label>
                 <input type="password" name="password" />
                 <label htmlFor="role">User role:</label>
-                <select name="role" id="role" defaultValue="user">
+                <select name="role" id="role" defaultValue="owner" disabled>
                     <option value="owner">Owner</option>
                     <option value="admin">Admin</option>
                     <option value="user">User</option>
