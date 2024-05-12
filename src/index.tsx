@@ -9,6 +9,7 @@ import { ManageUsers } from './views/ManageUsers';
 import { ManageMovies } from './views/ManageMovies';
 import { EditMovie } from './views/EditMovie';
 import { RegisterNewUser } from './views/RegisterNewUser';
+import { Login } from './views/Login';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,6 +18,7 @@ root.render(
   <BrowserRouter>
     <Routes>
       <Route index path='/' Component={Home} />
+      <Route path='/login' Component={Login} />
       <Route path='/watch/*' Component={Watch} />
       <Route path='/settings/profilesettings' Component={ProfileSettings} />
       <Route path='/settings/profilesettings/*' Component={ProfileSettings} />

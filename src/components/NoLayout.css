@@ -1,0 +1,30 @@
+.NoLayout-container{
+    width: 100vw;
+    height: 100vh;
+    background-color: white;
+}
+
+.NoLayout-container form{
+    display: flex;
+    flex-direction: column;
+    width: 250px;
+    margin-inline: auto;
+}
+
+.NoLayout-container form label{
+    margin-top: 15px;
+}
+
+.NoLayout-container form button{
+    width: 100px;
+    height: 35px;
+    border: none;
+    color: white;
+    background-color: #5E5E5E;
+    margin-inline: auto;
+    margin-top: 20px;
+}
+
+.NoLayout-container form button:hover{
+    background-color: #999;
+}
