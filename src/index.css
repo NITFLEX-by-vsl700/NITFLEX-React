@@ -11,3 +11,16 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.vertical{
+  display: flex;
+  flex-direction: column;
+}
+
+.horizontal{
+  display: flex;
+}
+
+.nitflex-button{
+  cursor: pointer;
+}
