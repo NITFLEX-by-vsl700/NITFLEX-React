@@ -32,6 +32,10 @@ function Watch(){
         return pathNameSegments[2] !== undefined ? pathNameSegments[2] : epsArr[0].id;
     }
 
+    const onEpisodeClick = (episodeId: string) => {
+        window.location.href = `/watch/${movie.id}/${episodeId}`;
+    }
+
     // pathName = '/watch/{movieId}' or '/watch/{movieId}/{episodeId}'
     const pathNameSegments = getPathNameSegments();
     const movieId = pathNameSegments[1];
@@ -88,8 +92,9 @@ function Watch(){
                 {!episodes.includes(defaultEpisode) && 
                     <div className='Watch-episodes'>
                         {episodes.map(e => 
-                            <div key={e.id} className='Watch-episode-element'>
-                                <a href={`/watch/${movieId}/${e.id}`}>{`S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}</a>
+                            <div key={e.id} className='Watch-episode-element' onClick={() => {onEpisodeClick(e.id)}}>
+                                {`S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}
+                                {episodeId === e.id && <p className='Current-element'>Current</p>}
                             </div>
                         )}
                     </div>
