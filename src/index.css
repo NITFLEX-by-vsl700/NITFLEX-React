@@ -24,3 +24,7 @@ code {
 .nitflex-button{
   cursor: pointer;
 }
+
+.disabled{
+  cursor: not-allowed !important;
+}

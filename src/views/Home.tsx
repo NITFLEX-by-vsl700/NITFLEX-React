@@ -4,6 +4,9 @@ import './Home.css';
 import './MovieCard.css'
 import { Header } from '../components/Header';
 import { backendUrl } from '../globals';
+import { Modal } from '../components/Modal';
+import { Player, SubtitleTrack } from '../components/Player';
+import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 
 function Home() {
   const [movies, setMovies] = useState([defaultMovie]);
@@ -42,9 +45,23 @@ function Home() {
 }
 
 const MovieCard = (props: {movie: Movie}) => {
+  const [trailerModalOpen, setTrailerModalOpen] = useState(false);
+
   const watchMovie = () => {
     window.location.href = `/watch/${props.movie.id}`;
   }
+
+  const openTrailerModal = () => {
+    setTrailerModalOpen(true);
+  }
+
+  const closeTrailerModal = () => {
+    setTrailerModalOpen(false);
+  }
+
+  // Make 'Watch trailer' action inactive if no trailer
+  // Fix modal closing errors and bugs
+  // Auto-refresh of the Home page makes the player reload
 
   return (
     <div className='Movie-card'>
@@ -54,16 +71,42 @@ const MovieCard = (props: {movie: Movie}) => {
       </div>
       <div className='Movie-card-action'>
         <MovieCardAction onClick={watchMovie}>Watch</MovieCardAction>
-        <MovieCardAction onClick={() => {alert('Not implemented!')}}>Watch trailer</MovieCardAction>
+        <MovieCardAction onClick={openTrailerModal}>Watch trailer</MovieCardAction> {/* If no trailer, the action should be inactive */}
       </div>
+      <Modal isOpen={trailerModalOpen} onClose={closeTrailerModal}>
+        <TrailerPlayerContainer movie={props.movie}/>
+      </Modal>
     </div>
   )
 }
 
-const MovieCardAction = (props: {onClick: Function, children: string}) => {
+const MovieCardAction = (props: {disabled?: boolean, onClick: Function, children: string}) => {
   return (
-    <div className='Movie-card-option' onClick={() => props.onClick()}>
+    <div className={`Movie-card-option${props.disabled ? ' disabled' : ''}`} onClick={() => props.onClick()}>
       <p className='Option-text'>{props.children}</p>
+    </div>
+  )
+}
+
+const TrailerPlayerContainer = (props: {movie: Movie}) => {
+  const [subtitles, setSubtitles] = useState([defaultSubtitle]);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    if(ready)
+      return;
+
+    fetch(backendUrl + `/subtitles/${props.movie.id}/trailer`)
+      .then(response => response.json())
+      .then((subsArr: Subtitle[]) => {
+          setSubtitles(subsArr);
+          setReady(true);
+      })
+  });
+
+  return (
+    <div className='Trailer-player-container'>
+      {ready && <Player width={400} videoPath={`${backendUrl}/stream/trailer/${props.movie.id}`} subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${backendUrl}/stream/subs/${props.movie.id}/${s.id}`, label: s.name}})} />}
     </div>
   )
 }
