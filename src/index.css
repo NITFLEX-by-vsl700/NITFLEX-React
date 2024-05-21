@@ -28,3 +28,12 @@ code {
 .disabled{
   cursor: not-allowed !important;
 }
+
+.Form-error{
+  width: 100%;
+  background-color: lightcoral;
+}
+
+.Form-error p{
+  margin: 10px;
+}

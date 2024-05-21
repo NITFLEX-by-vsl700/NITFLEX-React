@@ -19,12 +19,16 @@ export const Player = (props: {width: number, height?: number, videoPath: string
         let player = videojs('videojs-player', options);
         player.width(props.width);
         player.height(props.height);
-        player.src({ src: `${videoURL}/manifest.mpd`, type: 'application/dash+xml' });
+        player.src({ src: `${videoURL}/manifest.mpd`, type: 'application/dash+xml', withCredentials: true, 
+            headers: {
+                'Test-Header': 'It-works'
+            } });
     });
 
     return (
         <video id='videojs-player'
         className="video-js"
+        crossOrigin="use-credentials"
         controls
         preload="auto"></video>
     );

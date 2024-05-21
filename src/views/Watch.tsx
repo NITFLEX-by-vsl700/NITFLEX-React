@@ -6,6 +6,7 @@ import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 import './Watch.css';
 import { Header } from '../components/Header';
 import { backendUrl } from '../globals';
+import axios from 'axios';
 
 function Watch(){
     const [movie, setMovie] = useState(defaultMovie);
@@ -41,33 +42,33 @@ function Watch(){
     const movieId = pathNameSegments[1];
     const episodeId = getEpisodeId(episodes);
 
-    // fetch necessary data
+    // axios.get necessary data
     useEffect(() => {
         if(movie !== defaultMovie)
             return;
 
-        fetch(backendUrl + `/movies/${movieId}`)
-            .then(response => response.json())
+        axios.get(backendUrl + `/movies/${movieId}`, { withCredentials: true })
+            .then(response => response.data)
             .then((obj: Movie) => {
                 setMovie(obj);
 
                 if(obj.type === "Series"){
-                    // fetch episodes as well
-                    fetch(backendUrl + `/episodes/${movieId}`)
-                        .then(response1 => response1.json())
+                    // axios.get episodes as well
+                    axios.get(backendUrl + `/episodes/${movieId}`, { withCredentials: true })
+                        .then(response1 => response1.data)
                         .then((epsArr: Episode[]) => {
                             setEpisodes(epsArr);
 
-                            fetch(backendUrl + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`)
-                            .then(response => response.json())
+                            axios.get(backendUrl + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`, { withCredentials: true })
+                            .then(response => response.data)
                             .then((subsArr: Subtitle[]) => {
                                 setSubtitles(subsArr);
                                 setReady(true);
                             })
                         })
                 }else{
-                    fetch(backendUrl + `/subtitles/${obj.id}/film`)
-                    .then(response => response.json())
+                    axios.get(backendUrl + `/subtitles/${obj.id}/film`, { withCredentials: true })
+                    .then(response => response.data)
                     .then((subsArr: Subtitle[]) => {
                         setSubtitles(subsArr);
                         setReady(true);

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import axios from 'axios';
 import { Movie, defaultMovie } from '../models/Movie';
 import './Home.css';
 import './MovieCard.css'
@@ -12,8 +13,8 @@ function Home() {
   const [movies, setMovies] = useState([defaultMovie]);
 
   const fetchMovies = () => {
-    fetch(backendUrl + "/movies")
-      .then(response => response.json())
+    axios.get(backendUrl + "/movies", { withCredentials: true })
+      .then(response => response.data)
       .then((arr: Movie[]) => {
         setMovies(arr);
       });
@@ -96,8 +97,8 @@ const TrailerPlayerContainer = (props: {movie: Movie}) => {
     if(ready)
       return;
 
-    fetch(backendUrl + `/subtitles/${props.movie.id}/trailer`)
-      .then(response => response.json())
+    axios.get(backendUrl + `/subtitles/${props.movie.id}/trailer`, { withCredentials: true })
+      .then(response => response.data)
       .then((subsArr: Subtitle[]) => {
           setSubtitles(subsArr);
           setReady(true);
