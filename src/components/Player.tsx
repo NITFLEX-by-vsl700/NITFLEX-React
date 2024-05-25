@@ -30,3 +30,10 @@ export const Player = (props: {width: number, height?: number, videoPath: string
         preload="auto"></video>
     );
 }
+
+export const disposePlayers = () => {
+    const players = videojs.getAllPlayers()
+    players.forEach(p => {
+        p.dispose();
+    });
+}
