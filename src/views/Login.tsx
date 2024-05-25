@@ -28,10 +28,10 @@ export const Login = () => {
             username: username,
             password: password
         }, {
+            withCredentials: true,
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            withCredentials: true
+            }
         })
         .then(success, failure)
     }

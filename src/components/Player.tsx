@@ -19,10 +19,7 @@ export const Player = (props: {width: number, height?: number, videoPath: string
         let player = videojs('videojs-player', options);
         player.width(props.width);
         player.height(props.height);
-        player.src({ src: `${videoURL}/manifest.mpd`, type: 'application/dash+xml', withCredentials: true, 
-            headers: {
-                'Test-Header': 'It-works'
-            } });
+        player.src({ src: `${videoURL}/manifest.mpd`, type: 'application/dash+xml', withCredentials: true});
     });
 
     return (

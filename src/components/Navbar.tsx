@@ -5,8 +5,15 @@ import manageUsers from "../assets/manage_users.svg"
 import manageMovies from "../assets/manage_movies.svg"
 import logout from "../assets/logout.svg"
 import cross from '../assets/cross.svg'
+import axios from "axios"
+import { backendUrl } from "../globals"
 
 export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
+    const onLogOut = () => {
+        axios.get(backendUrl + '/logout', { withCredentials: true })
+            .then(() => window.location.href = '/login')
+    }
+
     return (
         <div className='Navbar'>
             <div className="Navbar-head">
@@ -15,12 +22,12 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
                     <CloseButton onClick={() => {if(props.onClose !== undefined) props.onClose()}} />}
             </div>
             <hr />
-            <NavOption imageSrc={profileSettings}>Profile settings</NavOption>
-            <NavOption imageSrc={regNewUser}>Register new user</NavOption>
-            <NavOption imageSrc={manageUsers}>Manage users</NavOption>
-            <NavOption imageSrc={manageMovies}>Manage movies</NavOption>
+            <NavOption imageSrc={profileSettings} onClick={() => {}}>Profile settings</NavOption>
+            <NavOption imageSrc={regNewUser} onClick={() => {}}>Register new user</NavOption>
+            <NavOption imageSrc={manageUsers} onClick={() => {}}>Manage users</NavOption>
+            <NavOption imageSrc={manageMovies} onClick={() => {}}>Manage movies</NavOption>
             <hr />
-            <NavOption imageSrc={logout}>Log out</NavOption>
+            <NavOption imageSrc={logout} onClick={onLogOut}>Log out</NavOption>
         </div>
     )
 }
@@ -34,9 +41,9 @@ const NavHeading = () => {
     )
 }
 
-const NavOption = (props: {imageSrc: string, children: string}) => {
+const NavOption = (props: {imageSrc: string, onClick: Function, children: string}) => {
     return (
-        <div className="Navbar-option">
+        <div className="Navbar-option" onClick={() => props.onClick()}>
             <img className="Navbar-option-image" src={props.imageSrc} alt="Option icon" />
             <p className="Navbar-option-text">{props.children}</p>
         </div>

@@ -11,6 +11,10 @@ export const Header = (props: {navbar?: boolean}) => {
         setNavbarToggled(!navbarToggled);
     }
 
+    const onHomeButtonClick = () => {
+        window.location.href = '/';
+    }
+
     return (
         <div>
             {props.navbar && 
@@ -22,7 +26,7 @@ export const Header = (props: {navbar?: boolean}) => {
                 <button className='Header-menu-button nitflex-button' hidden={!props.navbar} onClick={toggleNavbar}>
                     <img src={menu} alt="" />
                 </button>
-                <img className='Header-logo nitflex-button' src={logo} alt="" />
+                <img className='Header-logo nitflex-button' src={logo} alt="" onClick={() => onHomeButtonClick()} />
                 <form className='Header-movie-request'>
                     <input type="url" name="link" id="movie-request-link" placeholder='Request a movie...' />
                 </form>
