@@ -6,7 +6,7 @@ import './MovieCard.css'
 import { Header } from '../components/Header';
 import { backendUrl } from '../globals';
 import { Modal } from '../components/Modal';
-import { Player, SubtitleTrack, disposePlayers } from '../components/Player';
+import { Player, SubtitleTrack } from '../components/Player';
 import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 
 function Home() {
@@ -82,14 +82,11 @@ const MovieCard = (props: {movie: Movie, onTrailerOpen: Function, onTrailerClose
   }
 
   const closeTrailerModal = () => {
-    disposePlayers();
-
     setTrailerModalOpen(false);
     props.onTrailerClose();
   }
 
   // Make 'Watch trailer' action inactive if no trailer
-  // Fix modal closing errors and bugs
 
   return (
     <div className='Movie-card'>

@@ -20,7 +20,9 @@ export const Player = (props: {width: number, height?: number, videoPath: string
         player.width(props.width);
         player.height(props.height);
         player.src({ src: `${videoURL}/manifest.mpd`, type: 'application/dash+xml', withCredentials: true});
-    });
+
+        return () => player.dispose();
+    }, [props.height, props.width]);
 
     return (
         <video id='videojs-player'
@@ -29,11 +31,4 @@ export const Player = (props: {width: number, height?: number, videoPath: string
         controls
         preload="auto"></video>
     );
-}
-
-export const disposePlayers = () => {
-    const players = videojs.getAllPlayers()
-    players.forEach(p => {
-        p.dispose();
-    });
 }
