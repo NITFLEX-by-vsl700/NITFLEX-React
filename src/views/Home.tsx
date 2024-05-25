@@ -90,7 +90,6 @@ const MovieCard = (props: {movie: Movie, onTrailerOpen: Function, onTrailerClose
 
   // Make 'Watch trailer' action inactive if no trailer
   // Fix modal closing errors and bugs
-  // Find a way to destroy the trailer player after closing the modal
 
   return (
     <div className='Movie-card'>
