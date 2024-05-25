@@ -11,8 +11,13 @@ import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 
 function Home() {
   const [movies, setMovies] = useState([defaultMovie]);
+  const [trailerOpen, setTrailerOpen] = useState(false);
+  const [timeoutID, setTimeoutID] = useState(setTimeout(() => {}, 0));
+  const [timeoutRunning, setTimeoutRunning] = useState(false);
 
-  const fetchMovies = () => {
+  const fetchMovies = () => {    
+    if(trailerOpen) return;
+
     axios.get(backendUrl + "/movies", { withCredentials: true })
       .then(response => response.data)
       .then((arr: Movie[]) => {
@@ -20,11 +25,30 @@ function Home() {
       });
   }
 
+  const onTrailerOpen = () => {
+    setTrailerOpen(true)
+  }
+
+  const onTrailerClose = () => {
+    setTrailerOpen(false)
+  }
+
   useEffect(() => {
+    if(timeoutRunning) {
+      if(trailerOpen){
+        clearTimeout(timeoutID);
+        setTimeoutRunning(false);
+      }
+      return;
+    }
+
+    if(trailerOpen) return;
+
     if(movies.includes(defaultMovie)){
       fetchMovies();
     }else{
-      setTimeout(fetchMovies, 20000);
+      setTimeoutID(setTimeout(() => {setTimeoutRunning(false); fetchMovies();}, 20000));
+      setTimeoutRunning(true);
     }
   });
 
@@ -37,7 +61,7 @@ function Home() {
         </form>
         <div className='Home-movies'>
           {movies.filter(m => m !== defaultMovie).map(m => 
-            <MovieCard key={m.id} movie={m} />
+            <MovieCard key={m.id} movie={m} onTrailerOpen={() => onTrailerOpen()} onTrailerClose={() => onTrailerClose()} />
           )}
         </div>
       </div>
@@ -45,7 +69,7 @@ function Home() {
   );
 }
 
-const MovieCard = (props: {movie: Movie}) => {
+const MovieCard = (props: {movie: Movie, onTrailerOpen: Function, onTrailerClose: Function}) => {
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
 
   const watchMovie = () => {
@@ -54,15 +78,16 @@ const MovieCard = (props: {movie: Movie}) => {
 
   const openTrailerModal = () => {
     setTrailerModalOpen(true);
+    props.onTrailerOpen();
   }
 
   const closeTrailerModal = () => {
     setTrailerModalOpen(false);
+    props.onTrailerClose();
   }
 
   // Make 'Watch trailer' action inactive if no trailer
   // Fix modal closing errors and bugs
-  // Auto-refresh of the Home page makes the player reload
 
   return (
     <div className='Movie-card'>
