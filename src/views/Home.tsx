@@ -15,10 +15,26 @@ function Home() {
   const [timeoutID, setTimeoutID] = useState(setTimeout(() => {}, 0));
   const [timeoutRunning, setTimeoutRunning] = useState(false);
 
-  const fetchMovies = () => {    
+  const getSearchParam = (): string | null => {
+    let search = window.location.search
+    if(search === '')
+      return null
+
+    return search.substring(search.indexOf('?') + 1)
+  }
+
+  const fetchMovies = () => {
+    const getPath = (): string => {
+      let search = getSearchParam()
+      if(search)
+        return `/movies?${search}`
+
+      return '/movies'
+    }
+
     if(trailerOpen) return;
 
-    axios.get(backendUrl + "/movies", { withCredentials: true })
+    axios.get(backendUrl + getPath(), { withCredentials: true })
       .then(response => response.data)
       .then((arr: Movie[]) => {
         setMovies(arr);
