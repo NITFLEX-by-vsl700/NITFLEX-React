@@ -44,10 +44,6 @@ export const ProfileSettings = () => {
         setUserSettings(userSettings)
     }
 
-    const ready = (): boolean => {
-        return user !== defaultUser && userSettings !== defaultUserSettings
-    }
-
     const onSaveSettings = () => {
         axios.put(backendUrl + `/users/settings/${getUserId()}`, userSettings, { withCredentials: true })
         .then(() => window.location.href = '/settings/users')
@@ -78,7 +74,7 @@ export const ProfileSettings = () => {
     }, [])
 
     return (
-        <SettingsPageTemplate title="Profile Settings" additionalInfo={ready() ? user.username : ''}>
+        <SettingsPageTemplate title="Profile Settings" additionalInfo={user !== defaultUser ? user.username : ''}>
             {/* <SettingSection title="Device sessions">
                 <table className="Settings-table">
                     <thead>
@@ -107,7 +103,7 @@ export const ProfileSettings = () => {
                     </tbody>
                 </table>
             </SettingSection> */}
-            {ready() ? <SettingSection title="Settings" separatorLine>
+            {userSettings !== defaultUserSettings ? <SettingSection title="Settings" separatorLine>
                 <HorizontalSetting label="Profile state">
                     <input type="radio" name="state" id="state-active" value="ACTIVE" onChange={e => setUserStatus(e.target.value)} defaultChecked={userSettings.status === 'ACTIVE'} />
                     <label htmlFor="state-active">✔Active</label>
