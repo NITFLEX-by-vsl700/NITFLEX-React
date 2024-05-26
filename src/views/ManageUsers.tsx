@@ -1,9 +1,45 @@
+import { useEffect, useState } from "react"
 import { SettingsPageTemplate } from "../components/SettingsTemplates"
 import deleteIcon from '../assets/delete.svg'
 import editIcon from '../assets/edit.svg'
+import { User, defaultUser } from "../models/User"
 import './Settings.css'
+import axios from "axios"
+import { backendUrl } from "../globals"
 
 export const ManageUsers = () => {
+    const [users, setUsers] = useState([defaultUser])
+
+    const getUserRole = (user: User): string => {
+        switch(user.role){
+            case 'ROLE_OWNER': return 'Owner'
+            case 'ROLE_ADMIN': return 'Admin'
+            case 'ROLE_USER': return 'User'
+            default: return 'Invalid role!'
+        }
+    }
+
+    const onUserEdit = (user: User) => {
+        window.location.href = `/settings/profilesettings/${user.id}`
+    }
+
+    const onUserDelete = (user: User) => {
+        axios.delete(backendUrl + `/users/${user.id}`, { withCredentials: true })
+            .then(() => fetchUsers())
+    }
+
+    const fetchUsers = () => {
+        axios.get(backendUrl + '/users', { withCredentials: true })
+        .then(response => response.data)
+        .then((obj: User[]) => {
+            setUsers(obj);
+        })
+    }
+
+    useEffect(() => {
+        fetchUsers()
+    }, [])
+
     return (
         <SettingsPageTemplate title="Manage users">
             <table className="Settings-table">
@@ -15,42 +51,20 @@ export const ManageUsers = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>vsl700</td>
-                        <td>Owner</td>
-                        <td>
-                            <button className="Edit-button nitflex-button">
-                                <img src={editIcon} alt="" />
-                            </button>
-                            <button className="Delete-button nitflex-button">
-                                <img src={deleteIcon} alt="" />
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>george1514</td>
-                        <td>User</td>
-                        <td>
-                            <button className="Edit-button nitflex-button">
-                                <img src={editIcon} alt="" />
-                            </button>
-                            <button className="Delete-button nitflex-button">
-                                <img src={deleteIcon} alt="" />
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>simon</td>
-                        <td>Admin</td>
-                        <td>
-                            <button className="Edit-button nitflex-button">
-                                <img src={editIcon} alt="" />
-                            </button>
-                            <button className="Delete-button nitflex-button">
-                                <img src={deleteIcon} alt="" />
-                            </button>
-                        </td>
-                    </tr>
+                    {users.map(u => 
+                        <tr key={u.username}>
+                            <td>{u.username}</td>
+                            <td>{getUserRole(u)}</td>
+                            <td>
+                                <button className="Edit-button nitflex-button" onClick={() => onUserEdit(u)}>
+                                    <img src={editIcon} alt="" />
+                                </button>
+                                <button className="Delete-button nitflex-button" onClick={() => onUserDelete(u)}>
+                                    <img src={deleteIcon} alt="" />
+                                </button>
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </SettingsPageTemplate>
