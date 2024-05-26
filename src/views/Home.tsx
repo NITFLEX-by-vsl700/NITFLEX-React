@@ -15,6 +15,7 @@ function Home() {
   const [timeoutID, setTimeoutID] = useState(setTimeout(() => {}, 0));
   const [timeoutRunning, setTimeoutRunning] = useState(false);
 
+  // Gets the Movie search param, not 'window.location.search'
   const getSearchParam = (): string | null => {
     let search = window.location.search
     if(search === '')
