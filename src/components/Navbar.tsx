@@ -9,6 +9,10 @@ import axios from "axios"
 import { backendUrl } from "../globals"
 
 export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
+    const onManageUsers = () => {
+        window.location.href = '/settings/users'
+    }
+
     const onRegisterNewUser = () => {
         window.location.href = '/settings/users/new'
     }
@@ -28,7 +32,7 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
             <hr />
             <NavOption imageSrc={profileSettings} onClick={() => {}}>Profile settings</NavOption>
             <NavOption imageSrc={regNewUser} onClick={onRegisterNewUser}>Register new user</NavOption>
-            <NavOption imageSrc={manageUsers} onClick={() => {}}>Manage users</NavOption>
+            <NavOption imageSrc={manageUsers} onClick={onManageUsers}>Manage users</NavOption>
             <NavOption imageSrc={manageMovies} onClick={() => {}}>Manage movies</NavOption>
             <hr />
             <NavOption imageSrc={logout} onClick={onLogOut}>Log out</NavOption>
