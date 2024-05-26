@@ -86,8 +86,6 @@ const MovieCard = (props: {movie: Movie, onTrailerOpen: Function, onTrailerClose
     props.onTrailerClose();
   }
 
-  // Make 'Watch trailer' action inactive if no trailer
-
   return (
     <div className='Movie-card'>
       <div className='Movie-card-data'>
@@ -96,7 +94,7 @@ const MovieCard = (props: {movie: Movie, onTrailerOpen: Function, onTrailerClose
       </div>
       <div className='Movie-card-action'>
         <MovieCardAction onClick={watchMovie}>Watch</MovieCardAction>
-        <MovieCardAction onClick={openTrailerModal}>Watch trailer</MovieCardAction> {/* If no trailer, the action should be inactive */}
+        <MovieCardAction disabled={!props.movie.hasTrailer} onClick={openTrailerModal}>Watch trailer</MovieCardAction> {/* If no trailer, the action should be inactive */}
       </div>
       <Modal isOpen={trailerModalOpen} onClose={closeTrailerModal}>
         <TrailerPlayerContainer movie={props.movie}/>
@@ -107,7 +105,7 @@ const MovieCard = (props: {movie: Movie, onTrailerOpen: Function, onTrailerClose
 
 const MovieCardAction = (props: {disabled?: boolean, onClick: Function, children: string}) => {
   return (
-    <div className={`Movie-card-option${props.disabled ? ' disabled' : ''}`} onClick={() => props.onClick()}>
+    <div className={`Movie-card-option${props.disabled ? ' disabled' : ''}`} onClick={() => !props.disabled && props.onClick()}>
       <p className='Option-text'>{props.children}</p>
     </div>
   )
