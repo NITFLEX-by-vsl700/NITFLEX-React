@@ -6,8 +6,10 @@ import { useEffect, useState } from "react"
 import { UserSettings, defaultUserSettings } from "../models/UserSettings"
 import axios from "axios"
 import { backendUrl } from "../globals"
+import { User, defaultUser } from "../models/User"
 
 export const ProfileSettings = () => {
+    const [user, setUser] = useState(defaultUser)
     const [userSettings, setUserSettings] = useState(defaultUserSettings)
 
     const getPathNameSegments = (): string[] => {
@@ -21,7 +23,7 @@ export const ProfileSettings = () => {
     const getUserId = (): string => {
         let pathNameSegments = getPathNameSegments()
         if(pathNameSegments[2] === undefined){
-            // return current user's id
+            return user.id
         }            
 
         return getPathNameSegments()[2]
@@ -43,7 +45,7 @@ export const ProfileSettings = () => {
     }
 
     const ready = (): boolean => {
-        return userSettings !== defaultUserSettings
+        return user !== defaultUser && userSettings !== defaultUserSettings
     }
 
     const onSaveSettings = () => {
@@ -51,14 +53,32 @@ export const ProfileSettings = () => {
         .then(() => window.location.href = '/settings/users')
     }
 
+    const loadUserSettings = (user: User) => {
+        axios.get(backendUrl + `/users/settings/${user.id}`, { withCredentials: true })
+                .then(response => response.data)
+                .then((obj: UserSettings) => setUserSettings(obj))
+    }
+
     useEffect(() => {
-        axios.get(backendUrl + `/users/settings/${getUserId()}`, { withCredentials: true })
-            .then(response => response.data)
-            .then((obj: UserSettings) => setUserSettings(obj))
+        let userId = getUserId()
+        if(userId === '')
+            axios.get(backendUrl + `/currentUser`, { withCredentials: true })
+                .then(response => response.data)
+                .then((obj: User) => {
+                    setUser(obj)
+                    loadUserSettings(obj)
+                })
+        else
+            axios.get(backendUrl + `/users/${userId}`, { withCredentials: true })
+                .then(response => response.data)
+                .then((obj: User) => {
+                    setUser(obj)
+                    loadUserSettings(obj)
+                })
     }, [])
 
     return (
-        <SettingsPageTemplate title="Profile Settings" additionalInfo="vsl700">
+        <SettingsPageTemplate title="Profile Settings" additionalInfo={ready() ? user.username : ''}>
             {/* <SettingSection title="Device sessions">
                 <table className="Settings-table">
                     <thead>

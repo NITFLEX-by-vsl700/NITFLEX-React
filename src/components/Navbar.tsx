@@ -9,6 +9,14 @@ import axios from "axios"
 import { backendUrl } from "../globals"
 
 export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
+    const onProfileSettings = () => {
+        window.location.href = '/settings/profilesettings'
+    }
+
+    const onManageMovies = () => {
+        window.location.href = '/settings/movies'
+    }
+
     const onManageUsers = () => {
         window.location.href = '/settings/users'
     }
@@ -30,10 +38,10 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
                     <CloseButton onClick={() => {if(props.onClose !== undefined) props.onClose()}} />}
             </div>
             <hr />
-            <NavOption imageSrc={profileSettings} onClick={() => {}}>Profile settings</NavOption>
+            <NavOption imageSrc={profileSettings} onClick={onProfileSettings}>Profile settings</NavOption>
             <NavOption imageSrc={regNewUser} onClick={onRegisterNewUser}>Register new user</NavOption>
             <NavOption imageSrc={manageUsers} onClick={onManageUsers}>Manage users</NavOption>
-            <NavOption imageSrc={manageMovies} onClick={() => {}}>Manage movies</NavOption>
+            <NavOption imageSrc={manageMovies} onClick={onManageMovies}>Manage movies</NavOption>
             <hr />
             <NavOption imageSrc={logout} onClick={onLogOut}>Log out</NavOption>
         </div>
