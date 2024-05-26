@@ -90,7 +90,7 @@ const MovieCard = (props: {movie: Movie, onTrailerOpen: Function, onTrailerClose
     <div className='Movie-card'>
       <div className='Movie-card-data'>
         <h2 className='Movie-title'>{props.movie.name}</h2>
-        <p className='Movie-added-by'>Added by {"vsl700"}</p>
+        <p className='Movie-added-by'>Added by {props.movie.requester == null ? 'server' : props.movie.requester}</p>
       </div>
       <div className='Movie-card-action'>
         <MovieCardAction onClick={watchMovie}>Watch</MovieCardAction>
