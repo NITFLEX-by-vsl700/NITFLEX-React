@@ -7,8 +7,12 @@ import logout from "../assets/logout.svg"
 import cross from '../assets/cross.svg'
 import axios from "axios"
 import { backendUrl } from "../globals"
+import { useEffect, useState } from "react"
+import { User, defaultUser } from "../models/User"
 
 export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
+    const [user, setUser] = useState(defaultUser)
+
     const onProfileSettings = () => {
         window.location.href = '/settings/profilesettings'
     }
@@ -30,10 +34,16 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
             .then(() => window.location.href = '/login')
     }
 
+    useEffect(() => {
+        axios.get(backendUrl + '/currentUser', { withCredentials: true })
+            .then(response => response.data)
+            .then(obj => setUser(obj))
+    }, [])
+
     return (
         <div className='Navbar'>
             <div className="Navbar-head">
-                <NavHeading />
+                {user !== defaultUser && <NavHeading user={user} />}
                 {props.closeable && 
                     <CloseButton onClick={() => {if(props.onClose !== undefined) props.onClose()}} />}
             </div>
@@ -48,11 +58,20 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
     )
 }
 
-const NavHeading = () => {
+const NavHeading = (props: {user: User}) => {
+    const getUserRole = (user: User): string => {
+        switch(user.role){
+            case 'ROLE_OWNER': return 'Owner'
+            case 'ROLE_ADMIN': return 'Admin'
+            case 'ROLE_USER': return 'User'
+            default: return 'Invalid role!'
+        }
+    }
+
     return (
         <div className="Navbar-heading">
-            <p className="Navbar-username">vsl700</p>
-            <p className="Navbar-role">Owner</p>
+            <p className="Navbar-username">{props.user.username}</p>
+            <p className="Navbar-role">{getUserRole(props.user)}</p>
         </div>
     )
 }
