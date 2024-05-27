@@ -1,9 +1,36 @@
+import { useEffect, useState } from "react"
 import { SettingsPageTemplate } from "../components/SettingsTemplates"
 import deleteIcon from '../assets/delete.svg'
 import editIcon from '../assets/edit.svg'
 import './Settings.css'
+import { Movie, defaultMovie } from "../models/Movie"
+import axios from "axios"
+import { backendUrl } from "../globals"
 
 export const ManageMovies = () => {
+    const [movies, setMovies] = useState([defaultMovie]);
+
+    const onMovieEdit = (movie: Movie) => {
+        window.location.href = `/settings/movies/${movie.id}`
+    }
+
+    const onMovieDelete = (movie: Movie) => {
+        axios.delete(backendUrl + `/movies/${movie.id}`, { withCredentials: true })
+            .then(() => fetchMovies())
+    }
+
+    const fetchMovies = () => {
+        axios.get(backendUrl + '/movies', { withCredentials: true })
+        .then(response => response.data)
+        .then((obj: Movie[]) => {
+            setMovies(obj);
+        })
+    }
+
+    useEffect(() => {
+        fetchMovies()
+    }, [])
+
     return (
         <SettingsPageTemplate title="Manage movies">
             <table className="Settings-table">
@@ -15,30 +42,20 @@ export const ManageMovies = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</td>
-                        <td>vsl700</td>
-                        <td>
-                            <button className="Edit-button nitflex-button">
-                                <img src={editIcon} alt="" />
-                            </button>
-                            <button className="Delete-button nitflex-button">
-                                <img src={deleteIcon} alt="" />
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</td>
-                        <td>george1514</td>
-                        <td>
-                            <button className="Edit-button nitflex-button">
-                                <img src={editIcon} alt="" />
-                            </button>
-                            <button className="Delete-button nitflex-button">
-                                <img src={deleteIcon} alt="" />
-                            </button>
-                        </td>
-                    </tr>
+                    {movies.filter(m => m !== defaultMovie).map(m => 
+                        <tr>
+                            <td>{m.name}</td>
+                            <td>{m.requester == null ? 'server' : m.requester}</td>
+                            <td>
+                                <button className="Edit-button nitflex-button" onClick={() => onMovieEdit(m)}>
+                                    <img src={editIcon} alt="" />
+                                </button>
+                                <button className="Delete-button nitflex-button" onClick={() => onMovieDelete(m)}>
+                                    <img src={deleteIcon} alt="" />
+                                </button>
+                            </td>
+                        </tr>
+                    )}
                 </tbody>
             </table>
         </SettingsPageTemplate>
