@@ -26,7 +26,7 @@ export const ProfileSettings = () => {
             return user.id
         }            
 
-        return getPathNameSegments()[2]
+        return pathNameSegments[2]
     }
 
     const setUserStatus = (status: string) => {
@@ -46,7 +46,7 @@ export const ProfileSettings = () => {
 
     const onSaveSettings = () => {
         axios.put(backendUrl + `/users/settings/${getUserId()}`, userSettings, { withCredentials: true })
-        .then(() => window.location.href = '/settings/users')
+            .then(() => window.location.href = '/settings/users')
     }
 
     const loadUserSettings = (user: User) => {
