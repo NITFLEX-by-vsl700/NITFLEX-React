@@ -51,7 +51,7 @@ export const ManageUsers = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {users.map(u => 
+                    {users.filter(u => u !== defaultUser).map(u => 
                         <tr key={u.username}>
                             <td>{u.username}</td>
                             <td>{getUserRole(u)}</td>
