@@ -50,7 +50,6 @@ export const InitialRegister = () => {
                 <label htmlFor="role">User role:</label>
                 <select name="role" id="role" defaultValue={role} disabled onChange={e => setRole(e.target.value)}>
                     <option value="ROLE_OWNER">Owner</option>
-                    <option value="ROLE_ADMIN">Admin</option>
                     <option value="ROLE_USER">User</option>
                 </select>
                 <label htmlFor="devlimit">Device limit:</label>

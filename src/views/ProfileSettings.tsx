@@ -11,6 +11,7 @@ import { User, defaultUser } from "../models/User"
 export const ProfileSettings = () => {
     const [user, setUser] = useState(defaultUser)
     const [userSettings, setUserSettings] = useState(defaultUserSettings)
+    const [userPrivileges, setUserPrivileges] = useState([''])
 
     const getPathNameSegments = (): string[] => {
         let result = window.location.pathname.substring(1);
@@ -55,7 +56,19 @@ export const ProfileSettings = () => {
                 .then((obj: UserSettings) => setUserSettings(obj))
     }
 
+    const loadUserPrivileges = (user: User) => {
+        axios.get(backendUrl + `/users/privileges`, { withCredentials: true })
+                .then(response => response.data)
+                .then((obj: string[]) => setUserPrivileges(obj))
+    }
+
+    const hasPrivilege = (privilege: string) => {
+        return userPrivileges.includes(privilege)
+    }
+
     useEffect(() => {
+        if(user !== defaultUser) return
+
         let userId = getUserId()
         if(userId === '')
             axios.get(backendUrl + `/currentUser`, { withCredentials: true })
@@ -63,6 +76,7 @@ export const ProfileSettings = () => {
                 .then((obj: User) => {
                     setUser(obj)
                     loadUserSettings(obj)
+                    loadUserPrivileges(obj)
                 })
         else
             axios.get(backendUrl + `/users/${userId}`, { withCredentials: true })
@@ -70,6 +84,7 @@ export const ProfileSettings = () => {
                 .then((obj: User) => {
                     setUser(obj)
                     loadUserSettings(obj)
+                    loadUserPrivileges(obj)
                 })
     }, [])
 
@@ -105,22 +120,21 @@ export const ProfileSettings = () => {
             </SettingSection> */}
             {userSettings !== defaultUserSettings ? <SettingSection title="Settings" separatorLine>
                 <HorizontalSetting label="Profile state">
-                    <input type="radio" name="state" id="state-active" value="ACTIVE" onChange={e => setUserStatus(e.target.value)} defaultChecked={userSettings.status === 'ACTIVE'} />
+                    <input type="radio" name="state" id="state-active" value="ACTIVE" onChange={e => setUserStatus(e.target.value)} defaultChecked={userSettings.status === 'ACTIVE'} disabled={!hasPrivilege('WRITE_USER_SETTINGS_PRIVILEGE')} />
                     <label htmlFor="state-active">✔Active</label>
-                    <input type="radio" name="state" id="state-banned" value="BANNED" onChange={e => setUserStatus(e.target.value)} defaultChecked={userSettings.status === 'BANNED'} />
+                    <input type="radio" name="state" id="state-banned" value="BANNED" onChange={e => setUserStatus(e.target.value)} defaultChecked={userSettings.status === 'BANNED'} disabled={!hasPrivilege('WRITE_USER_SETTINGS_PRIVILEGE')} />
                     <label htmlFor="state-banned">❌Banned</label>
                 </HorizontalSetting>
                 <HorizontalSetting label="User role">
-                    <select name="role" id="role" onChange={e => setUserRole(e.target.value)} defaultValue={userSettings.role}>
+                    <select name="role" id="role" onChange={e => setUserRole(e.target.value)} defaultValue={userSettings.role} disabled={!hasPrivilege('WRITE_USER_SETTINGS_PRIVILEGE')}>
                         <option value="ROLE_OWNER">Owner</option>
-                        <option value="ROLE_ADMIN">Admin</option>
                         <option value="ROLE_USER">User</option>
                     </select>
                 </HorizontalSetting>
                 <HorizontalSetting label="Device limit">
-                    <input type="number" name="devlimit" id="device-limit" onChange={e => setUserDeviceLimit(parseInt(e.target.value))} min={1} defaultValue={userSettings.deviceLimit} />
+                    <input type="number" name="devlimit" id="device-limit" onChange={e => setUserDeviceLimit(parseInt(e.target.value))} min={1} defaultValue={userSettings.deviceLimit} disabled={!hasPrivilege('WRITE_USER_SETTINGS_PRIVILEGE')} />
                 </HorizontalSetting>
-                <button className="Settings-save-button nitflex-button" onClick={() => onSaveSettings()}>Save settings</button>
+                { hasPrivilege('WRITE_USER_SETTINGS_PRIVILEGE') ? <button className="Settings-save-button nitflex-button" onClick={() => onSaveSettings()}>Save settings</button> : <></> }
             </SettingSection> : <></>}
         </SettingsPageTemplate>
     )

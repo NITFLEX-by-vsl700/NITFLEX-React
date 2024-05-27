@@ -13,7 +13,6 @@ export const ManageUsers = () => {
     const getUserRole = (user: User): string => {
         switch(user.role){
             case 'ROLE_OWNER': return 'Owner'
-            case 'ROLE_ADMIN': return 'Admin'
             case 'ROLE_USER': return 'User'
             default: return 'Invalid role!'
         }

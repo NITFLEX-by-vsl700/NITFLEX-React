@@ -12,6 +12,14 @@ import { User, defaultUser } from "../models/User"
 
 export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
     const [user, setUser] = useState(defaultUser)
+    const [privileges, setPrivileges] = useState([''])
+
+    const hasAnyPrivilege = (priv: string | string[]) => {
+        if(typeof priv === "string")
+            return privileges.includes(priv)
+
+        return priv.filter(p => privileges.includes(p)).length > 0
+    }
 
     const onProfileSettings = () => {
         window.location.href = '/settings/profilesettings'
@@ -37,7 +45,12 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
     useEffect(() => {
         axios.get(backendUrl + '/currentUser', { withCredentials: true })
             .then(response => response.data)
-            .then(obj => setUser(obj))
+            .then((obj: User) => {
+                setUser(obj)
+                axios.get(backendUrl + `/users/privileges`, { withCredentials : true })
+                    .then(response => response.data)
+                    .then((obj1: string[]) => setPrivileges(obj1))
+            })
     }, [])
 
     return (
@@ -48,10 +61,14 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
                     <CloseButton onClick={() => {if(props.onClose !== undefined) props.onClose()}} />}
             </div>
             <hr />
-            <NavOption imageSrc={profileSettings} onClick={onProfileSettings}>Profile settings</NavOption>
-            <NavOption imageSrc={regNewUser} onClick={onRegisterNewUser}>Register new user</NavOption>
-            <NavOption imageSrc={manageUsers} onClick={onManageUsers}>Manage users</NavOption>
-            <NavOption imageSrc={manageMovies} onClick={onManageMovies}>Manage movies</NavOption>
+            { hasAnyPrivilege('READ_USER_SETTINGS_PRIVILEGE') && 
+                <NavOption imageSrc={profileSettings} onClick={onProfileSettings}>Profile settings</NavOption> }
+            { hasAnyPrivilege(['REGISTER_USERS_PRIVILEGE', 'REGISTER_ADMINS_PRIVILEGE', 'REGISTER_OWNERS_PRIVILEGE']) && 
+                <NavOption imageSrc={regNewUser} onClick={onRegisterNewUser}>Register new user</NavOption> }
+            { hasAnyPrivilege(['MANAGE_USERS_PRIVILEGE', 'MANAGE_ADMINS_PRIVILEGE', 'MANAGE_OWNERS_PRIVILEGE']) && 
+                <NavOption imageSrc={manageUsers} onClick={onManageUsers}>Manage users</NavOption> }
+            { hasAnyPrivilege('MANAGE_MOVIES_PRIVILEGE') && 
+                <NavOption imageSrc={manageMovies} onClick={onManageMovies}>Manage movies</NavOption> }
             <hr />
             <NavOption imageSrc={logout} onClick={onLogOut}>Log out</NavOption>
         </div>
