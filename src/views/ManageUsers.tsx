@@ -45,7 +45,7 @@ export const ManageUsers = () => {
             <table className="Settings-table">
                 <thead>
                     <tr>
-                        <th>Device</th>
+                        <th>User</th>
                         <th>Role</th>
                         <th>Actions</th>
                     </tr>
