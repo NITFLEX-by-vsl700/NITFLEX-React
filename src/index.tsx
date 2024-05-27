@@ -12,6 +12,7 @@ import { RegisterNewUser } from './views/RegisterNewUser';
 import { Login } from './views/Login';
 import { InitialRegister } from './views/InitialRegister';
 import StatusCheck from './components/StatusCheck';
+import { Banned } from './views/Banned';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -30,6 +31,8 @@ root.render(
         <Route path='/settings/users/new' Component={RegisterNewUser} />
         <Route path='/settings/movies' Component={ManageMovies} />
         <Route path='/settings/movies/*' Component={EditMovie} />
+
+        <Route index path='/banned' Component={Banned} />
       </Routes>
     </BrowserRouter>
   </StatusCheck>
