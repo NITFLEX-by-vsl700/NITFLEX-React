@@ -4,6 +4,9 @@ import { Movie, defaultMovie } from '../models/Movie';
 import { Episode, defaultEpisode } from '../models/Episode';
 import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 import './Watch.css';
+import { Header } from '../components/Header';
+import { backendUrl } from '../globals';
+import axios from 'axios';
 
 function Watch(){
     const [movie, setMovie] = useState(defaultMovie);
@@ -30,40 +33,42 @@ function Watch(){
         return pathNameSegments[2] !== undefined ? pathNameSegments[2] : epsArr[0].id;
     }
 
-    const BASE_URL = "http://localhost:8080"; // TEMPORARY
+    const onEpisodeClick = (episodeId: string) => {
+        window.location.href = `/watch/${movie.id}/${episodeId}`;
+    }
 
     // pathName = '/watch/{movieId}' or '/watch/{movieId}/{episodeId}'
     const pathNameSegments = getPathNameSegments();
     const movieId = pathNameSegments[1];
     const episodeId = getEpisodeId(episodes);
 
-    // fetch necessary data
+    // axios.get necessary data
     useEffect(() => {
         if(movie !== defaultMovie)
             return;
 
-        fetch(BASE_URL + `/movies/${movieId}`)
-            .then(response => response.json())
+        axios.get(backendUrl + `/movies/${movieId}`, { withCredentials: true })
+            .then(response => response.data)
             .then((obj: Movie) => {
                 setMovie(obj);
 
                 if(obj.type === "Series"){
-                    // fetch episodes as well
-                    fetch(BASE_URL + `/episodes/${movieId}`)
-                        .then(response1 => response1.json())
+                    // axios.get episodes as well
+                    axios.get(backendUrl + `/episodes/${movieId}`, { withCredentials: true })
+                        .then(response1 => response1.data)
                         .then((epsArr: Episode[]) => {
                             setEpisodes(epsArr);
 
-                            fetch(BASE_URL + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`)
-                            .then(response => response.json())
+                            axios.get(backendUrl + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`, { withCredentials: true })
+                            .then(response => response.data)
                             .then((subsArr: Subtitle[]) => {
                                 setSubtitles(subsArr);
                                 setReady(true);
                             })
                         })
                 }else{
-                    fetch(BASE_URL + `/subtitles/${obj.id}/film`)
-                    .then(response => response.json())
+                    axios.get(backendUrl + `/subtitles/${obj.id}/film`, { withCredentials: true })
+                    .then(response => response.data)
                     .then((subsArr: Subtitle[]) => {
                         setSubtitles(subsArr);
                         setReady(true);
@@ -72,22 +77,29 @@ function Watch(){
             });
     });
 
-    let videoPath = `${BASE_URL}/stream/${movie.type.toLowerCase()}/${movieId}`;
+    let videoPath = `${backendUrl}/stream/${movie.type.toLowerCase()}/${movieId}`;
     if(movie.type === "Series")
         videoPath += `/${episodeId}`;
     
     return (
-        <div className='Watch'>
-            {ready && <Player 
-                    videoPath={videoPath} 
-                    subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${BASE_URL}/stream/subs/${movie.id}/${s.id}`, label: s.name}})} />}
+        <div>
+            <Header navbar></Header>
+            <div className='Watch'>
+                {ready && <Player
+                        width={700}
+                        videoPath={videoPath} 
+                        subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${backendUrl}/stream/subs/${movie.id}/${s.id}`, label: s.name}})} />}
 
-            <div className='Watch-episodes'>
-                {episodes.filter(e => e !== defaultEpisode).map(e => 
-                    <div key={e.id} className='Watch-episode-element'>
-                        <a href={`/watch/${movieId}/${e.id}`}>{`S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}</a>
+                {!episodes.includes(defaultEpisode) && 
+                    <div className='Watch-episodes'>
+                        {episodes.map(e => 
+                            <div key={e.id} className='Watch-episode-element' onClick={() => {onEpisodeClick(e.id)}}>
+                                {`S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}
+                                {episodeId === e.id && <p className='Current-element'>Current</p>}
+                            </div>
+                        )}
                     </div>
-                )}
+                }
             </div>
         </div>
     );

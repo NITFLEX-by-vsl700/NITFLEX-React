@@ -11,25 +11,31 @@ import { EditMovie } from './views/EditMovie';
 import { RegisterNewUser } from './views/RegisterNewUser';
 import { Login } from './views/Login';
 import { InitialRegister } from './views/InitialRegister';
+import StatusCheck from './components/StatusCheck';
+import { Banned } from './views/Banned';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
 root.render(
-  <BrowserRouter>
-    <Routes>
-      <Route index path='/' Component={Home} />
-      <Route path='/login' Component={Login} />
-      <Route path='/register' Component={InitialRegister} />
-      <Route path='/watch/*' Component={Watch} />
-      <Route path='/settings/profilesettings' Component={ProfileSettings} />
-      <Route path='/settings/profilesettings/*' Component={ProfileSettings} />
-      <Route path='/settings/users' Component={ManageUsers} />
-      <Route path='/settings/users/new' Component={RegisterNewUser} />
-      <Route path='/settings/movies' Component={ManageMovies} />
-      <Route path='/settings/movies/*' Component={EditMovie} />
-    </Routes>
-  </BrowserRouter>
+  <StatusCheck>
+    <BrowserRouter>
+      <Routes>
+        <Route index path='/' Component={Home} />
+        <Route path='/login' Component={Login} />
+        <Route path='/welcome' Component={InitialRegister} />
+        <Route path='/watch/*' Component={Watch} />
+        <Route path='/settings/profilesettings' Component={ProfileSettings} />
+        <Route path='/settings/profilesettings/*' Component={ProfileSettings} />
+        <Route path='/settings/users' Component={ManageUsers} />
+        <Route path='/settings/users/new' Component={RegisterNewUser} />
+        <Route path='/settings/movies' Component={ManageMovies} />
+        <Route path='/settings/movies/*' Component={EditMovie} />
+
+        <Route index path='/banned' Component={Banned} />
+      </Routes>
+    </BrowserRouter>
+  </StatusCheck>
 );
 
 // If you want to start measuring performance in your app, pass a function

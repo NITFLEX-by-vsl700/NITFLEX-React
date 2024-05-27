@@ -11,6 +11,7 @@
     position: absolute;
     animation-name: showNavbar;
     animation-duration: 0.25s;
+    z-index: 10; /* Because of videojs player */
 }
 
 .Navbar-container-hidden{
@@ -56,4 +57,17 @@
     width: 332px;
     height: 40px;
     font-size: 17px;
+}
+
+.Header-movie-request .Movie-request-button{
+    margin-left: 10px;
+    border: none;
+    background-color: #6F6F6F;
+    color: white;
+    padding-inline: 15px;
+    height: 44px;
+}
+
+.Header-movie-request .Movie-request-button:hover{
+    background-color: #888;
 }
