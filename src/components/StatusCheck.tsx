@@ -1,13 +1,14 @@
 import React from "react"
-import axios from 'axios'
 import { backendUrl } from "../globals"
+import { GetRequest } from "../utils/Requests"
+import { ClearToken } from "../utils/Token"
 
 const StatusCheck = (props: {children: React.ReactElement | React.ReactElement[]}) => {
     const loginHref = "/login"
     const welcomeHref = "/welcome"
     const bannedHref = "/banned"
 
-    axios.get(backendUrl + '/userStatus', { withCredentials: true })
+    GetRequest(backendUrl + '/userStatus')
         .then(response => response.data)
         .then(json => {
             if(json.status === "unauthenticated"){
@@ -18,8 +19,11 @@ const StatusCheck = (props: {children: React.ReactElement | React.ReactElement[]
                 || window.location.pathname === loginHref
                 || window.location.pathname === bannedHref) window.location.href = "/"
         }).catch(error => {
-            if(error.response.status === 401){ // BANNED
+            if(error.response.status === 403){ // BANNED
                 if(window.location.pathname !== bannedHref) window.location.href = bannedHref
+            }else if(error.response.status === 401){ // Some other reason to not let you in (e.g. deleted user)
+                ClearToken();
+                window.location.href = loginHref;
             }
         })
     

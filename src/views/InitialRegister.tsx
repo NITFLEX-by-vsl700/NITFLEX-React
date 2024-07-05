@@ -1,7 +1,7 @@
 import { useState } from "react";
-import axios from "axios";
 import { NoLayout } from "../components/NoLayout"
 import { backendUrl } from "../globals";
+import { PostRequest } from "../utils/Requests";
 
 export const InitialRegister = () => {
     const [username, setUsername] = useState("");
@@ -26,13 +26,11 @@ export const InitialRegister = () => {
     }
 
     const onRegister = () => {
-        axios.post(backendUrl + "/welcome", {
+        PostRequest(backendUrl + "/welcome", {
             username: username,
             password: password,
             role: role,
             deviceLimit: deviceLimit
-        }, {
-            headers: { }
         })
         .then(success, failure)
     }

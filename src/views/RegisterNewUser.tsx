@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { SettingsPageTemplate } from "../components/SettingsTemplates"
 import { backendUrl } from "../globals";
-import axios from "axios";
+import { PostRequest } from "../utils/Requests";
 
 export const RegisterNewUser = () => {
     const [username, setUsername] = useState("");
@@ -26,13 +26,11 @@ export const RegisterNewUser = () => {
     }
 
     const onRegister = () => {
-        axios.post(backendUrl + "/register", {
+        PostRequest(backendUrl + "/register", {
             username: username,
             password: password,
             role: role,
             deviceLimit: deviceLimit
-        }, {
-            withCredentials: true
         })
         .then(success, failure)
     }

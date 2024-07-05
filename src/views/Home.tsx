@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import { Movie, defaultMovie } from '../models/Movie';
 import './Home.css';
 import './MovieCard.css'
@@ -8,6 +7,7 @@ import { backendUrl } from '../globals';
 import { Modal } from '../components/Modal';
 import { Player, SubtitleTrack } from '../components/Player';
 import { Subtitle, defaultSubtitle } from '../models/Subtitle';
+import { GetRequest } from '../utils/Requests';
 
 function Home() {
   const [movies, setMovies] = useState([defaultMovie]);
@@ -35,7 +35,7 @@ function Home() {
 
     if(trailerOpen) return;
 
-    axios.get(backendUrl + getPath(), { withCredentials: true })
+    GetRequest(backendUrl + getPath())
       .then(response => response.data)
       .then((arr: Movie[]) => {
         setMovies(arr);
@@ -136,7 +136,7 @@ const TrailerPlayerContainer = (props: {movie: Movie}) => {
     if(ready)
       return;
 
-    axios.get(backendUrl + `/subtitles/${props.movie.id}/trailer`, { withCredentials: true })
+    GetRequest(backendUrl + `/subtitles/${props.movie.id}/trailer`)
       .then(response => response.data)
       .then((subsArr: Subtitle[]) => {
           setSubtitles(subsArr);

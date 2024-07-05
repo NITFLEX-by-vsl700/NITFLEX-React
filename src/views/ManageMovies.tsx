@@ -4,8 +4,8 @@ import deleteIcon from '../assets/delete.svg'
 import editIcon from '../assets/edit.svg'
 import './Settings.css'
 import { Movie, defaultMovie } from "../models/Movie"
-import axios from "axios"
 import { backendUrl } from "../globals"
+import { DeleteRequest, GetRequest } from "../utils/Requests"
 
 export const ManageMovies = () => {
     const [movies, setMovies] = useState([defaultMovie]);
@@ -15,12 +15,12 @@ export const ManageMovies = () => {
     }
 
     const onMovieDelete = (movie: Movie) => {
-        axios.delete(backendUrl + `/movies/${movie.id}`, { withCredentials: true })
+        DeleteRequest(backendUrl + `/movies/${movie.id}`)
             .then(() => fetchMovies())
     }
 
     const fetchMovies = () => {
-        axios.get(backendUrl + '/movies', { withCredentials: true })
+        GetRequest(backendUrl + '/movies')
         .then(response => response.data)
         .then((obj: Movie[]) => {
             setMovies(obj);

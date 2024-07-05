@@ -1,15 +1,18 @@
 import { useState } from "react"
-import axios from "axios"
 import { NoLayout } from "../components/NoLayout"
 import { backendUrl } from "../globals"
+import { PostRequest } from "../utils/Requests"
+import { SetToken } from "../utils/Token"
 
 export const Login = () => {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(false);
 
-    const success = () => {
+    const success = (data: string) => {
         setError(false);
+        
+        SetToken(data);
         window.location.href = "/";
     }
 
@@ -24,16 +27,13 @@ export const Login = () => {
     }
 
     const onLogin = () => {
-        axios.post(backendUrl + "/login", {
+        PostRequest(backendUrl + "/login", {
             username: username,
             password: password
-        }, {
-            withCredentials: true,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
         })
-        .then(success, failure)
+        .then(response => response.data)
+        .then(success)
+        .catch(failure)
     }
 
     return (
