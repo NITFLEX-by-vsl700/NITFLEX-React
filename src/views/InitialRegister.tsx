@@ -2,6 +2,7 @@ import { useState } from "react";
 import { NoLayout } from "../components/NoLayout"
 import { backendUrl } from "../globals";
 import { PostRequest } from "../utils/Requests";
+import { SetToken } from "../utils/Token";
 
 export const InitialRegister = () => {
     const [username, setUsername] = useState("");
@@ -10,9 +11,11 @@ export const InitialRegister = () => {
     const [role, setRole] = useState("ROLE_OWNER");
     const [error, setError] = useState(false);
 
-    const success = () => {
+    const success = (data: string) => {
         setError(false);
-        window.location.href = "/login";
+
+        SetToken(data);
+        window.location.href = "/";
     }
 
     const failure = (error: any) => {
@@ -32,6 +35,7 @@ export const InitialRegister = () => {
             role: role,
             deviceLimit: deviceLimit
         })
+        .then(response => response.data)
         .then(success, failure)
     }
 
