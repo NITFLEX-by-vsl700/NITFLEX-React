@@ -6,7 +6,7 @@ import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 import './Watch.css';
 import { Header } from '../components/Header';
 import { backendUrl } from '../globals';
-import axios from 'axios';
+import { GetRequest } from '../utils/Requests';
 
 function Watch(){
     const [movie, setMovie] = useState(defaultMovie);
@@ -47,19 +47,19 @@ function Watch(){
         if(movie !== defaultMovie)
             return;
 
-        axios.get(backendUrl + `/movies/${movieId}`, { withCredentials: true })
+        GetRequest(backendUrl + `/movies/${movieId}`)
             .then(response => response.data)
             .then((obj: Movie) => {
                 setMovie(obj);
 
                 if(obj.type === "Series"){
                     // axios.get episodes as well
-                    axios.get(backendUrl + `/episodes/${movieId}`, { withCredentials: true })
+                    GetRequest(backendUrl + `/episodes/${movieId}`)
                         .then(response1 => response1.data)
                         .then((epsArr: Episode[]) => {
                             setEpisodes(epsArr);
 
-                            axios.get(backendUrl + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`, { withCredentials: true })
+                            GetRequest(backendUrl + `/subtitles/${obj.id}/episode/${getEpisodeId(epsArr)}`)
                             .then(response => response.data)
                             .then((subsArr: Subtitle[]) => {
                                 setSubtitles(subsArr);
@@ -67,7 +67,7 @@ function Watch(){
                             })
                         })
                 }else{
-                    axios.get(backendUrl + `/subtitles/${obj.id}/film`, { withCredentials: true })
+                    GetRequest(backendUrl + `/subtitles/${obj.id}/film`)
                     .then(response => response.data)
                     .then((subsArr: Subtitle[]) => {
                         setSubtitles(subsArr);

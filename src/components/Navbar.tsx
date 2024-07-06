@@ -5,10 +5,11 @@ import manageUsers from "../assets/manage_users.svg"
 import manageMovies from "../assets/manage_movies.svg"
 import logout from "../assets/logout.svg"
 import cross from '../assets/cross.svg'
-import axios from "axios"
 import { backendUrl } from "../globals"
 import { useEffect, useState } from "react"
 import { User, defaultUser } from "../models/User"
+import { GetRequest } from "../utils/Requests"
+import { ClearToken } from "../utils/Token"
 
 export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
     const [user, setUser] = useState(defaultUser)
@@ -38,16 +39,18 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
     }
 
     const onLogOut = () => {
-        axios.get(backendUrl + '/logout', { withCredentials: true })
-            .then(() => window.location.href = '/login')
+        ClearToken();
+        window.location.href = '/login';
+        // GetRequest(backendUrl + '/logout')
+        //     .then(() => window.location.href = '/login')
     }
 
     useEffect(() => {
-        axios.get(backendUrl + '/currentUser', { withCredentials: true })
+        GetRequest(backendUrl + '/currentUser')
             .then(response => response.data)
             .then((obj: User) => {
                 setUser(obj)
-                axios.get(backendUrl + `/users/privileges`, { withCredentials : true })
+                GetRequest(backendUrl + `/users/privileges`)
                     .then(response => response.data)
                     .then((obj1: string[]) => setPrivileges(obj1))
             })

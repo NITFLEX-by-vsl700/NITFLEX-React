@@ -4,9 +4,9 @@ import './Settings.css'
 import './ProfileSettings.css'
 import { useEffect, useState } from "react"
 import { UserSettings, defaultUserSettings } from "../models/UserSettings"
-import axios from "axios"
 import { backendUrl } from "../globals"
 import { User, defaultUser } from "../models/User"
+import { GetRequest, PutRequest } from "../utils/Requests"
 
 export const ProfileSettings = () => {
     const [user, setUser] = useState(defaultUser)
@@ -46,18 +46,18 @@ export const ProfileSettings = () => {
     }
 
     const onSaveSettings = () => {
-        axios.put(backendUrl + `/users/settings/${getUserId()}`, userSettings, { withCredentials: true })
+        PutRequest(backendUrl + `/users/settings/${getUserId()}`, userSettings)
             .then(() => window.location.href = '/settings/users')
     }
 
     const loadUserSettings = (user: User) => {
-        axios.get(backendUrl + `/users/settings/${user.id}`, { withCredentials: true })
+        GetRequest(backendUrl + `/users/settings/${user.id}`)
                 .then(response => response.data)
                 .then((obj: UserSettings) => setUserSettings(obj))
     }
 
     const loadUserPrivileges = (user: User) => {
-        axios.get(backendUrl + `/users/privileges`, { withCredentials: true })
+        GetRequest(backendUrl + `/users/privileges`)
                 .then(response => response.data)
                 .then((obj: string[]) => setUserPrivileges(obj))
     }
@@ -71,7 +71,7 @@ export const ProfileSettings = () => {
 
         let userId = getUserId()
         if(userId === '')
-            axios.get(backendUrl + `/currentUser`, { withCredentials: true })
+            GetRequest(backendUrl + `/currentUser`)
                 .then(response => response.data)
                 .then((obj: User) => {
                     setUser(obj)
@@ -79,7 +79,7 @@ export const ProfileSettings = () => {
                     loadUserPrivileges(obj)
                 })
         else
-            axios.get(backendUrl + `/users/${userId}`, { withCredentials: true })
+            GetRequest(backendUrl + `/users/${userId}`)
                 .then(response => response.data)
                 .then((obj: User) => {
                     setUser(obj)

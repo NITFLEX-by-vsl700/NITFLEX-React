@@ -3,7 +3,7 @@ import { SettingsPageTemplate } from "../components/SettingsTemplates"
 import './Settings.css'
 import { MovieSettings, defaultMovieSettings } from "../models/MovieSettings"
 import { backendUrl } from "../globals"
-import axios from "axios"
+import { GetRequest, PutRequest } from "../utils/Requests"
 
 export const EditMovie = () => {
     const [movieSettings, setMovieSettings] = useState(defaultMovieSettings)
@@ -26,12 +26,12 @@ export const EditMovie = () => {
     }
 
     const onSaveSettings = () => {
-        axios.put(backendUrl + `/movies/settings/${getMovieId()}`, movieSettings, { withCredentials: true })
+        PutRequest(backendUrl + `/movies/settings/${getMovieId()}`, movieSettings)
             .then(() => window.location.href = '/settings/movies')
     }
 
     useEffect(() => {
-        axios.get(backendUrl + `/movies/settings/${getMovieId()}`, { withCredentials: true })
+        GetRequest(backendUrl + `/movies/settings/${getMovieId()}`)
             .then(response => response.data)
             .then((obj: MovieSettings) => setMovieSettings(obj))
     }, [])

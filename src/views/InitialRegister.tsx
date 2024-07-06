@@ -1,7 +1,8 @@
 import { useState } from "react";
-import axios from "axios";
 import { NoLayout } from "../components/NoLayout"
 import { backendUrl } from "../globals";
+import { PostRequest } from "../utils/Requests";
+import { SetToken } from "../utils/Token";
 
 export const InitialRegister = () => {
     const [username, setUsername] = useState("");
@@ -10,9 +11,11 @@ export const InitialRegister = () => {
     const [role, setRole] = useState("ROLE_OWNER");
     const [error, setError] = useState(false);
 
-    const success = () => {
+    const success = (data: string) => {
         setError(false);
-        window.location.href = "/login";
+
+        SetToken(data);
+        window.location.href = "/";
     }
 
     const failure = (error: any) => {
@@ -26,14 +29,13 @@ export const InitialRegister = () => {
     }
 
     const onRegister = () => {
-        axios.post(backendUrl + "/welcome", {
+        PostRequest(backendUrl + "/welcome", {
             username: username,
             password: password,
             role: role,
             deviceLimit: deviceLimit
-        }, {
-            headers: { }
         })
+        .then(response => response.data)
         .then(success, failure)
     }
 

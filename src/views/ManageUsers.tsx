@@ -4,8 +4,8 @@ import deleteIcon from '../assets/delete.svg'
 import editIcon from '../assets/edit.svg'
 import { User, defaultUser } from "../models/User"
 import './Settings.css'
-import axios from "axios"
 import { backendUrl } from "../globals"
+import { DeleteRequest, GetRequest } from "../utils/Requests"
 
 export const ManageUsers = () => {
     const [users, setUsers] = useState([defaultUser])
@@ -23,12 +23,12 @@ export const ManageUsers = () => {
     }
 
     const onUserDelete = (user: User) => {
-        axios.delete(backendUrl + `/users/${user.id}`, { withCredentials: true })
+        DeleteRequest(backendUrl + `/users/${user.id}`)
             .then(() => fetchUsers())
     }
 
     const fetchUsers = () => {
-        axios.get(backendUrl + '/users', { withCredentials: true })
+        GetRequest(backendUrl + '/users')
         .then(response => response.data)
         .then((obj: User[]) => {
             setUsers(obj);
