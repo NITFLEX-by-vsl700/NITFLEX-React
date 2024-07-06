@@ -3,12 +3,13 @@ import logo from '../assets/nitflex_full_logo.svg'
 import menu from '../assets/menu.svg'
 import { Navbar } from './Navbar'
 import { useState } from 'react'
-import axios from 'axios'
 import { backendUrl } from '../globals'
+import { PostRequest } from '../utils/Requests'
 
 export const Header = (props: {navbar?: boolean}) => {
     const [navbarToggled, setNavbarToggled] = useState(false);
     const [requestInput, setRequestInput] = useState('');
+    const [requestSubmitActive, setRequestSubmitActive] = useState(true);
 
     const toggleNavbar = () => {
         setNavbarToggled(!navbarToggled);
@@ -19,9 +20,12 @@ export const Header = (props: {navbar?: boolean}) => {
     }
 
     const onRequestButtonClick = () => {
-        axios.post(backendUrl + `/request`, {url: requestInput}, { withCredentials: true })
+        setRequestSubmitActive(false);
+
+        PostRequest(backendUrl + `/request`, {url: requestInput})
             .then(() => alert("Request sent!"))
             .catch(() => alert("Request failed!"))
+            .finally(() => setRequestSubmitActive(true))
     }
 
     return (
@@ -38,7 +42,7 @@ export const Header = (props: {navbar?: boolean}) => {
                 <img className='Header-logo nitflex-button' src={logo} alt="" onClick={() => onHomeButtonClick()} />
                 <div className='Header-movie-request'>
                     <input type="url" name="link" id="movie-request-link" placeholder='Request a movie...' onChange={e => setRequestInput(e.target.value)} />
-                    <button className='Movie-request-button nitflex-button' onClick={() => onRequestButtonClick()}>Submit</button>
+                    <button className={`Movie-request-button nitflex-button${requestSubmitActive ? '' : ' disabled'}`} onClick={() => onRequestButtonClick()} disabled={!requestSubmitActive}>Submit</button>
                 </div>
             </div>
         </div>
