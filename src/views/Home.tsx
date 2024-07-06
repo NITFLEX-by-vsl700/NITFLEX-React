@@ -38,6 +38,7 @@ function Home() {
     GetRequest(backendUrl + getPath())
       .then(response => response.data)
       .then((arr: Movie[]) => {
+        arr.sort((a, b) => b.dateAdded - a.dateAdded);
         setMovies(arr);
       });
   }

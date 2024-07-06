@@ -31,20 +31,36 @@ export const ManageMovies = () => {
         fetchMovies()
     }, [])
 
+    const displaySize = (size: number): string => {
+        const units = ['Bytes', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+        let count = 0;
+
+        while(Math.round(size / 1024) > 0){
+            size /= 1024;
+            count++;
+        }
+
+        size = Math.round((size + Number.EPSILON) * 100) / 100;
+
+        return `${size} ${units[count]}`;
+    }
+
     return (
         <SettingsPageTemplate title="Manage movies">
             <table className="Settings-table">
                 <thead>
                     <tr>
                         <th>Movie</th>
+                        <th>Size</th>
                         <th>Added by</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {movies.filter(m => m !== defaultMovie).map(m => 
-                        <tr>
+                        <tr key={m.id}>
                             <td>{m.name}</td>
+                            <td>{displaySize(m.size)}</td>
                             <td>{m.requester == null ? 'server' : m.requester}</td>
                             <td>
                                 <button className="Edit-button nitflex-button" onClick={() => onMovieEdit(m)}>
