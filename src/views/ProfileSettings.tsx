@@ -6,11 +6,14 @@ import { useEffect, useState } from "react"
 import { UserSettings, defaultUserSettings } from "../models/UserSettings"
 import { backendUrl } from "../globals"
 import { User, defaultUser } from "../models/User"
-import { GetRequest, PutRequest } from "../utils/Requests"
+import { DeleteRequest, GetRequest, PutRequest } from "../utils/Requests"
+import { defaultDeviceSession, DeviceSession } from "../models/DeviceSession"
+import { ClearToken } from "../utils/Token"
 
 export const ProfileSettings = () => {
     const [user, setUser] = useState(defaultUser)
     const [userSettings, setUserSettings] = useState(defaultUserSettings)
+    const [deviceSessions, setDeviceSessions] = useState([defaultDeviceSession])
     const [userPrivileges, setUserPrivileges] = useState([''])
 
     const getPathNameSegments = (): string[] => {
@@ -19,6 +22,11 @@ export const ProfileSettings = () => {
             result = result.substring(0, result.lastIndexOf('/'));
 
         return result.split('/');
+    }
+
+    const isForCurrentUser = (): boolean => {
+        let pathNameSegments = getPathNameSegments()
+        return pathNameSegments[2] === undefined
     }
 
     const getUserId = (): string => {
@@ -45,6 +53,16 @@ export const ProfileSettings = () => {
         setUserSettings(userSettings)
     }
 
+    const onDeleteSession = (id: string) => {
+        let path = '/users/sessions'
+        if(!isForCurrentUser())
+            path += `/${user.id}`
+        path += `/${id}`
+
+        DeleteRequest(backendUrl + path)
+            .then(() => loadDeviceSessions(user))
+    }
+
     const onSaveSettings = () => {
         PutRequest(backendUrl + `/users/settings/${getUserId()}`, userSettings)
             .then(() => window.location.href = '/settings/users')
@@ -54,6 +72,16 @@ export const ProfileSettings = () => {
         GetRequest(backendUrl + `/users/settings/${user.id}`)
                 .then(response => response.data)
                 .then((obj: UserSettings) => setUserSettings(obj))
+    }
+
+    const loadDeviceSessions = (user: User) => {
+        let path = '/users/sessions'
+        if(!isForCurrentUser())
+            path += `/${user.id}`
+
+        GetRequest(backendUrl + path)
+                .then(response => response.data)
+                .then((obj: DeviceSession[]) => setDeviceSessions(obj))
     }
 
     const loadUserPrivileges = (user: User) => {
@@ -76,6 +104,7 @@ export const ProfileSettings = () => {
                 .then((obj: User) => {
                     setUser(obj)
                     loadUserSettings(obj)
+                    loadDeviceSessions(obj)
                     loadUserPrivileges(obj)
                 })
         else
@@ -84,13 +113,14 @@ export const ProfileSettings = () => {
                 .then((obj: User) => {
                     setUser(obj)
                     loadUserSettings(obj)
+                    loadDeviceSessions(obj)
                     loadUserPrivileges(obj)
                 })
     }, [])
 
     return (
         <SettingsPageTemplate title="Profile Settings" additionalInfo={user !== defaultUser ? user.username : ''}>
-            {/* <SettingSection title="Device sessions">
+            <SettingSection title="Device sessions">
                 <table className="Settings-table">
                     <thead>
                         <tr>
@@ -99,25 +129,19 @@ export const ProfileSettings = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Android 12</td>
-                            <td>
-                                <button className="Delete-button nitflex-button">
-                                    <img src={deleteIcon} alt="" />
-                                </button>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>Android 12</td>
-                            <td>
-                                <button className="Delete-button nitflex-button">
-                                    <img src={deleteIcon} alt="" />
-                                </button>
-                            </td>
-                        </tr>
+                        {deviceSessions.filter(d => d !== defaultDeviceSession).map(d => 
+                            <tr key={d.id}>
+                                <td>{d.name}</td>
+                                <td>
+                                    <button className="Delete-button nitflex-button" onClick={() => onDeleteSession(d.id)}>
+                                        <img src={deleteIcon} alt="" />
+                                    </button>
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
-            </SettingSection> */}
+            </SettingSection>
             {userSettings !== defaultUserSettings ? <SettingSection title="Settings" separatorLine>
                 <HorizontalSetting label="Profile state">
                     <input type="radio" name="state" id="state-active" value="ACTIVE" onChange={e => setUserStatus(e.target.value)} defaultChecked={userSettings.status === 'ACTIVE'} disabled={!hasPrivilege('WRITE_USER_SETTINGS_PRIVILEGE')} />

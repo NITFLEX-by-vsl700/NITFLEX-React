@@ -5,6 +5,7 @@ import { ClearToken } from "../utils/Token"
 
 const StatusCheck = (props: {children: React.ReactElement | React.ReactElement[]}) => {
     const loginHref = "/login"
+    const deviceNameHref = "/login/deviceName"
     const welcomeHref = "/welcome"
     const bannedHref = "/banned"
 
@@ -15,6 +16,8 @@ const StatusCheck = (props: {children: React.ReactElement | React.ReactElement[]
                 if(window.location.pathname !== loginHref) window.location.href = loginHref
             }else if(json.status === "no-users"){
                 if(window.location.pathname !== welcomeHref) window.location.href = welcomeHref
+            }else if(json.status === "no-device-name"){
+                if(window.location.pathname !== deviceNameHref) window.location.href = deviceNameHref
             }else if(window.location.pathname === welcomeHref
                 || window.location.pathname === loginHref
                 || window.location.pathname === bannedHref) window.location.href = "/"

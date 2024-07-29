@@ -13,6 +13,7 @@ import { Login } from './views/Login';
 import { InitialRegister } from './views/InitialRegister';
 import StatusCheck from './components/StatusCheck';
 import { Banned } from './views/Banned';
+import { DeviceLogin } from './views/DeviceLogin';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -23,6 +24,7 @@ root.render(
       <Routes>
         <Route index path='/' Component={Home} />
         <Route path='/login' Component={Login} />
+        <Route path='/login/deviceName' Component={DeviceLogin} />
         <Route path='/welcome' Component={InitialRegister} />
         <Route path='/watch/*' Component={Watch} />
         <Route path='/settings/profilesettings' Component={ProfileSettings} />
