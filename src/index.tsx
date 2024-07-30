@@ -26,7 +26,6 @@ root.render(
         <Route path='/login' Component={Login} />
         <Route path='/login/deviceName' Component={DeviceLogin} />
         <Route path='/welcome' Component={InitialRegister} />
-        <Route path='/watch/*' Component={Watch} />
         <Route path='/settings/profilesettings' Component={ProfileSettings} />
         <Route path='/settings/profilesettings/*' Component={ProfileSettings} />
         <Route path='/settings/users' Component={ManageUsers} />

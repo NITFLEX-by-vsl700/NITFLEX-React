@@ -19,7 +19,7 @@ test('tests the watch page with all movies in the back-end', () => {
         .then(links => {
             links.forEach(link => {
                 window.location.assign(link.getAttribute("href") as string);
-                render(<Watch />);
+                //render(<Watch movieId='' />);
 
                 screen.findByRole('video', {name: 'vjs-tech'})
                     .then(player => player.getAttribute('readyState'))

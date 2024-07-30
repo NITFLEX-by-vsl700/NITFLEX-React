@@ -1,7 +1,7 @@
 .Watch{
-    margin-top: 50px;
-    margin-inline: auto;
-    width: fit-content;
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
 }
 
 .Watch .Watch-episodes{

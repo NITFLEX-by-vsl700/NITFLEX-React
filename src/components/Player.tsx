@@ -10,7 +10,7 @@ export interface SubtitleTrack {
     label: string
 }
 
-export const Player = (props: {width: number, height?: number, videoPath: string, subtitlesPaths: SubtitleTrack[]}) => {
+export const Player = (props: {width?: number, height?: number, videoPath: string, subtitlesPaths: SubtitleTrack[]}) => {
     const videoURL = props.videoPath;
     const options = {
         preloadTextTracks: false,
@@ -19,8 +19,8 @@ export const Player = (props: {width: number, height?: number, videoPath: string
 
     useEffect(() => {
         let player = videojs('videojs-player');
-        player.width(props.width);
-        player.height(props.height);
+        //player.width(props.width);
+        //player.height(props.height);
         player.on('xhr-hooks-ready', () => {
             const playerXhrRequestHook = (options: any) => {
                 options.beforeSend = (xhr: any) => {
@@ -51,6 +51,7 @@ export const Player = (props: {width: number, height?: number, videoPath: string
             
             return player;
         })
+        player.play();
         return () => player.dispose();
     }, [props.height, props.width]);
 
@@ -58,7 +59,7 @@ export const Player = (props: {width: number, height?: number, videoPath: string
         <video id='videojs-player'
         className="video-js"
         controls
-        preload="auto">
+        preload="auto" data-setup={/*!(props.width || props.height) && */'{"fluid": true}'}>
             {/* {options.tracks.map(t => (<track key={t.src} src={t.src} kind={t.kind} srcLang={t.srclang} label={t.label} />))} */}
         </video>
     );

@@ -8,9 +8,11 @@ import { Modal } from '../components/Modal';
 import { Player, SubtitleTrack } from '../components/Player';
 import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 import { GetRequest } from '../utils/Requests';
+import Watch from './Watch';
 
 function Home() {
   const [movies, setMovies] = useState([defaultMovie]);
+  const [currentMovie, setCurrentMovie] = useState(defaultMovie);
   const [trailerOpen, setTrailerOpen] = useState(false);
   const [timeoutID, setTimeoutID] = useState(setTimeout(() => {}, 0));
   const [timeoutRunning, setTimeoutRunning] = useState(false);
@@ -43,6 +45,10 @@ function Home() {
       });
   }
 
+  const onMovieWatch = (movie: Movie) => {
+    setCurrentMovie(movie)
+  }
+
   const onTrailerOpen = () => {
     setTrailerOpen(true)
   }
@@ -53,14 +59,14 @@ function Home() {
 
   useEffect(() => {
     if(timeoutRunning) {
-      if(trailerOpen){
+      if(trailerOpen || currentMovie !== defaultMovie){
         clearTimeout(timeoutID);
         setTimeoutRunning(false);
       }
       return;
     }
 
-    if(trailerOpen) return;
+    if(trailerOpen || currentMovie !== defaultMovie) return;
 
     if(movies.includes(defaultMovie)){
       fetchMovies();
@@ -70,28 +76,28 @@ function Home() {
     }
   });
 
-  return (
-    <div>
-      <Header navbar={true} />
-      <div className="Home">
-        <form className='Search-form'>
-          <input type="text" name='search' placeholder='Search' />
-        </form>
-        <div className='Home-movies'>
-          {movies.filter(m => m !== defaultMovie).map(m => 
-            <MovieCard key={m.id} movie={m} onTrailerOpen={() => onTrailerOpen()} onTrailerClose={() => onTrailerClose()} />
-          )}
+  return currentMovie !== defaultMovie && <Watch movie={currentMovie} /> || 
+      (<div>
+        <Header navbar={true} />
+        <div className="Home">
+          <form className='Search-form'>
+            <input type="text" name='search' placeholder='Search' />
+          </form>
+          <div className='Home-movies'>
+            {movies.filter(m => m !== defaultMovie).map(m => 
+              <MovieCard key={m.id} movie={m} onMovieWatch={onMovieWatch} onTrailerOpen={() => onTrailerOpen()} onTrailerClose={() => onTrailerClose()} />
+            )}
+          </div>
         </div>
-      </div>
-    </div>
-  );
+      </div>)
+  
 }
 
-const MovieCard = (props: {movie: Movie, onTrailerOpen: Function, onTrailerClose: Function}) => {
+const MovieCard = (props: {movie: Movie, onMovieWatch: (movie: Movie) => void, onTrailerOpen: Function, onTrailerClose: Function}) => {
   const [trailerModalOpen, setTrailerModalOpen] = useState(false);
 
   const watchMovie = () => {
-    window.location.href = `/watch/${props.movie.id}`;
+    props.onMovieWatch(props.movie)
   }
 
   const openTrailerModal = () => {
