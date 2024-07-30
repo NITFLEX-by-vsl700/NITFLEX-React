@@ -1,0 +1,14 @@
+.video-js .vjs-play-progress{
+    background-color: #fdaf00;
+}
+
+.video-js .vjs-slider,
+.video-js .vjs-load-progress,
+.video-js .vjs-load-progress div{
+    background: white;
+    background-color: white;
+}
+
+.video-js .vjs-control-bar{
+    background: linear-gradient(#0000, #000);
+}

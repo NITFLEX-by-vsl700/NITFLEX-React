@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import videojs from "video.js";
 import "./Player.css";
+import "./videojs.css"
 import { GetToken } from "../utils/Token";
 import { GetRequest } from "../utils/Requests";
 import { backendUrl } from "../globals";
