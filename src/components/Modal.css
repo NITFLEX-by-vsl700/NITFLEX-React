@@ -1,4 +1,4 @@
-.Modal{
+.Modal, .Modal-container{
     position: fixed; /* Stay in place */
     z-index: 15; /* Sit on top */
     padding-top: 100px; /* Location of the box */

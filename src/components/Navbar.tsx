@@ -49,6 +49,10 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
         //     .then(() => window.location.href = '/login')
     }
 
+    const callOnClose = () => {
+        if(props.onClose !== undefined) props.onClose()
+    }
+
     useEffect(() => {
         GetRequest(backendUrl + '/currentUser')
             .then(response => response.data)
@@ -61,23 +65,26 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
     }, [])
 
     return (
-        <div className='Navbar'>
-            <div className="Navbar-head">
-                {user !== defaultUser && <NavHeading user={user} />}
-                {props.closeable && 
-                    <CloseButton onClick={() => {if(props.onClose !== undefined) props.onClose()}} />}
+        <div className="Navbar-wrapper">
+            {props.closeable && <div className="Navbar-empty-space" onClick={callOnClose} />}
+            <div className='Navbar'>
+                <div className="Navbar-head">
+                    {user !== defaultUser && <NavHeading user={user} />}
+                    {props.closeable && 
+                        <CloseButton onClick={callOnClose} />}
+                </div>
+                <hr />
+                { hasAnyPrivilege('READ_USER_SETTINGS_PRIVILEGE') && 
+                    <NavOption imageSrc={profileSettings} onClick={onProfileSettings}>Profile settings</NavOption> }
+                { hasAnyPrivilege(['REGISTER_USERS_PRIVILEGE', 'REGISTER_ADMINS_PRIVILEGE', 'REGISTER_OWNERS_PRIVILEGE']) && 
+                    <NavOption imageSrc={regNewUser} onClick={onRegisterNewUser}>Register new user</NavOption> }
+                { hasAnyPrivilege(['MANAGE_USERS_PRIVILEGE', 'MANAGE_ADMINS_PRIVILEGE', 'MANAGE_OWNERS_PRIVILEGE']) && 
+                    <NavOption imageSrc={manageUsers} onClick={onManageUsers}>Manage users</NavOption> }
+                { hasAnyPrivilege('MANAGE_MOVIES_PRIVILEGE') && 
+                    <NavOption imageSrc={manageMovies} onClick={onManageMovies}>Manage movies</NavOption> }
+                <hr />
+                <NavOption imageSrc={logout} onClick={onLogOut}>Log out</NavOption>
             </div>
-            <hr />
-            { hasAnyPrivilege('READ_USER_SETTINGS_PRIVILEGE') && 
-                <NavOption imageSrc={profileSettings} onClick={onProfileSettings}>Profile settings</NavOption> }
-            { hasAnyPrivilege(['REGISTER_USERS_PRIVILEGE', 'REGISTER_ADMINS_PRIVILEGE', 'REGISTER_OWNERS_PRIVILEGE']) && 
-                <NavOption imageSrc={regNewUser} onClick={onRegisterNewUser}>Register new user</NavOption> }
-            { hasAnyPrivilege(['MANAGE_USERS_PRIVILEGE', 'MANAGE_ADMINS_PRIVILEGE', 'MANAGE_OWNERS_PRIVILEGE']) && 
-                <NavOption imageSrc={manageUsers} onClick={onManageUsers}>Manage users</NavOption> }
-            { hasAnyPrivilege('MANAGE_MOVIES_PRIVILEGE') && 
-                <NavOption imageSrc={manageMovies} onClick={onManageMovies}>Manage movies</NavOption> }
-            <hr />
-            <NavOption imageSrc={logout} onClick={onLogOut}>Log out</NavOption>
         </div>
     )
 }

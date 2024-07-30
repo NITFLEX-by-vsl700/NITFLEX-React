@@ -1,4 +1,17 @@
+.Navbar-wrapper {
+    height: 100%;
+}
+
+.Navbar-empty-space {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background-color: #0006;
+}
+
 .Navbar{
+    z-index: 1;
+    position: relative;
     width: 315px;
     height: 100%;
     background-color: #555555;
