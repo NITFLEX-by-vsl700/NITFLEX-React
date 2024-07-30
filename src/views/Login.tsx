@@ -22,7 +22,7 @@ export const Login = () => {
         console.log(error)
 
         let nitflexError: NitflexError = error.response.data;
-        setErrorMessage(nitflexError.nitflexErrorMessage);
+        setErrorMessage(nitflexError.nitflexErrorMessage ? nitflexError.nitflexErrorMessage : 'Login failed! (server error)');
 
         // if(error.response && error.response.status === 302 && error.response.location === `${backendUrl}/`){
         //     success()

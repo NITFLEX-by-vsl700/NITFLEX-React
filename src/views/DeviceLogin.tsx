@@ -21,7 +21,7 @@ export const DeviceLogin = () => {
         console.log(error)
         
         let nitflexError: NitflexError = error.response.data;
-        setErrorMessage(nitflexError.nitflexErrorMessage);
+        setErrorMessage(nitflexError.nitflexErrorMessage ? nitflexError.nitflexErrorMessage : 'Login failed! (server error)');
 
         setError(true)
     }

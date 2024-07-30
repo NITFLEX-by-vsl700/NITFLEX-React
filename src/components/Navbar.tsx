@@ -39,8 +39,12 @@ export const Navbar = (props: {closeable?: boolean, onClose?: Function}) => {
     }
 
     const onLogOut = () => {
-        ClearToken();
-        window.location.href = '/login';
+        GetRequest(backendUrl + '/logout')
+            .then(() => {
+                ClearToken();
+                window.location.href = '/login';
+            })
+        
         // GetRequest(backendUrl + '/logout')
         //     .then(() => window.location.href = '/login')
     }
