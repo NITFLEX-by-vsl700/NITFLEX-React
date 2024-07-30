@@ -15,7 +15,7 @@ export const InitialRegister = () => {
         setError(false);
 
         SetToken(data);
-        window.location.href = "/";
+        window.location.href = "/login/deviceName";
     }
 
     const failure = (error: any) => {
