@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Player, SubtitleTrack } from '../components/Player';
+import { NitflexPlayer, SubtitleTrack } from '../components/Player';
 import { Movie } from '../models/Movie';
 import { Episode, defaultEpisode } from '../models/Episode';
 import { Subtitle, defaultSubtitle } from '../models/Subtitle';
@@ -100,7 +100,8 @@ function Watch(props: {movie: Movie}){
     return (
         <div>
             <div className='Watch'>
-                {ready && <Player
+                {ready && <NitflexPlayer
+                        title={movie.name}
                         videoPath={videoPath} 
                         subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${backendUrl}/stream/subs/${movie.id}/${s.id}`, label: s.name}})} />}
 

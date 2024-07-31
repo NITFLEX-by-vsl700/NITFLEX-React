@@ -1,3 +1,8 @@
+.video-js {
+    width: 100% !important;
+    height: 100% !important;
+}
+
 .video-js .vjs-play-progress{
     background-color: #fdaf00;
 }
@@ -11,4 +16,14 @@
 
 .video-js .vjs-control-bar{
     background: linear-gradient(#0000, #000);
+}
+
+.video-js .vjs-control-bar{
+    padding-block: 1.45em;
+    height: 6em;
+}
+
+.video-js .vjs-title-bar {
+    font-size: 3.2em;
+    display: flex;
 }

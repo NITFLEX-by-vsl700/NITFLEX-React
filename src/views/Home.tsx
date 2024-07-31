@@ -5,7 +5,7 @@ import './MovieCard.css'
 import { Header } from '../components/Header';
 import { backendUrl } from '../globals';
 import { Modal } from '../components/Modal';
-import { Player, SubtitleTrack } from '../components/Player';
+import { NitflexPlayer, SubtitleTrack } from '../components/Player';
 import { Subtitle, defaultSubtitle } from '../models/Subtitle';
 import { GetRequest } from '../utils/Requests';
 import Watch from './Watch';
@@ -153,7 +153,7 @@ const TrailerPlayerContainer = (props: {movie: Movie}) => {
 
   return (
     <div className='Trailer-player-container'>
-      {ready && <Player width={400} videoPath={`${backendUrl}/stream/trailer/${props.movie.id}`} subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${backendUrl}/stream/subs/${props.movie.id}/${s.id}`, label: s.name}})} />}
+      {ready && <NitflexPlayer videoPath={`${backendUrl}/stream/trailer/${props.movie.id}`} subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${backendUrl}/stream/subs/${props.movie.id}/${s.id}`, label: s.name}})} />}
     </div>
   )
 }
