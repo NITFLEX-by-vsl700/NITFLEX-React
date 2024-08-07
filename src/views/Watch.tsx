@@ -94,7 +94,9 @@ function Watch(){
                     <div className='Watch-episodes'>
                         {episodes.map(e => 
                             <div key={e.id} className='Watch-episode-element' onClick={() => {onEpisodeClick(e.id)}}>
-                                {`S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}
+                                {(e.seasonNumber !== 0 || e.episodeNumber !== 0) && 
+                                    `S${numberToText(e.seasonNumber)}E${numberToText(e.episodeNumber)}`}
+                                {<p className='Episode-name'>{e.name}</p>}
                                 {episodeId === e.id && <p className='Current-element'>Current</p>}
                             </div>
                         )}

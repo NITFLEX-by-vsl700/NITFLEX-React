@@ -20,9 +20,18 @@
     background-color: #404040;
 }
 
-.Watch-episode-element .Current-element{
-    color: gray;
+.Watch-episode-element .Current-element,
+.Watch-episode-element .Episode-name{
     margin: 0;
+}
+
+.Watch-episode-element .Episode-name{
+    color: gray;
+    margin-left: 10px;
+}
+
+.Watch-episode-element .Current-element{
+    color: orange;
     margin-left: auto;
     margin-right: 10px;
 }
