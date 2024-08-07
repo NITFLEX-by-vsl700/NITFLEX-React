@@ -33,8 +33,25 @@ function Watch(){
         return pathNameSegments[2] !== undefined ? pathNameSegments[2] : epsArr[0].id;
     }
 
+    const getNextEpisodeId = (): string | null => {
+        let currentEpisodeId = getEpisodeId(episodes);
+        let index = episodes.findIndex(e => e.id === currentEpisodeId);
+        if(index + 1 === episodes.length)
+            return null;
+
+        return episodes[index + 1].id;
+    }
+
     const onEpisodeClick = (episodeId: string) => {
         window.location.href = `/watch/${movie.id}/${episodeId}`;
+    }
+
+    const onVideoEndedSwitchEpisode = () => {
+        let nextEpisodeId: string | null = getNextEpisodeId();
+        if(!nextEpisodeId)
+            return;
+
+        onEpisodeClick(nextEpisodeId);
     }
 
     // pathName = '/watch/{movieId}' or '/watch/{movieId}/{episodeId}'
@@ -88,7 +105,8 @@ function Watch(){
                 {ready && <Player
                         width={700}
                         videoPath={videoPath} 
-                        subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${backendUrl}/stream/subs/${movie.id}/${s.id}`, label: s.name}})} />}
+                        subtitlesPaths={subtitles.filter(s => s !== defaultSubtitle).map((s): SubtitleTrack => {return {src: `${backendUrl}/stream/subs/${movie.id}/${s.id}`, label: s.name}})} 
+                        onVideoEnded={movie.type === "Series" ? () => onVideoEndedSwitchEpisode() : undefined}/>}
 
                 {!episodes.includes(defaultEpisode) && 
                     <div className='Watch-episodes'>

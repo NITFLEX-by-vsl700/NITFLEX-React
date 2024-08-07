@@ -10,7 +10,7 @@ export interface SubtitleTrack {
     label: string
 }
 
-export const Player = (props: {width: number, height?: number, videoPath: string, subtitlesPaths: SubtitleTrack[]}) => {
+export const Player = (props: {width: number, height?: number, videoPath: string, subtitlesPaths: SubtitleTrack[], onVideoEnded?: () => void}) => {
     const videoURL = props.videoPath;
     const options = {
         preloadTextTracks: false,
@@ -31,7 +31,10 @@ export const Player = (props: {width: number, height?: number, videoPath: string
             
             (player.tech({ IWillNotUseThisInPlugins: true }) as any).vhs.xhr.onRequest(playerXhrRequestHook);
         });
-        
+
+        if(props.onVideoEnded)
+          player.on('ended', props.onVideoEnded)
+
         player.src({ src: `${videoURL}/manifest.mpd`, type: 'application/dash+xml'});
         player.ready(() => {
             const createBlob = async (t: {src: string, label: string, kind: string, srclang: string}) => {
@@ -51,6 +54,7 @@ export const Player = (props: {width: number, height?: number, videoPath: string
             
             return player;
         })
+        player.play()
         return () => player.dispose();
     }, [props.height, props.width]);
 
