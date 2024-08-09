@@ -61,7 +61,7 @@ export const ManageMovies = () => {
                         <tr key={m.id}>
                             <td>{m.name}</td>
                             <td>{displaySize(m.size)}</td>
-                            <td>{m.requester == null ? 'server' : m.requester}</td>
+                            <td>{m.requester == null ? '-' : m.requester}</td>
                             <td>
                                 <button className="Edit-button nitflex-button" onClick={() => onMovieEdit(m)}>
                                     <img src={editIcon} alt="" />
